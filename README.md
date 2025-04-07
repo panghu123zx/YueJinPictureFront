@@ -42,3 +42,6 @@
 1. 安装依赖：`npm install`
 2. 开发环境：`npm run dev`
 3. 生产构建：`npm run build`
+
+# 图片展示
+
