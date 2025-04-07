@@ -82,7 +82,7 @@
       <template v-else-if="column.key === 'action'">
         <span>
           <a-space wrap>
-            <a-button @click='router.push(`/addpicture/${record.id}`)'>编辑</a-button>
+            <a-button @click='router.push(`/addpicture?id=${record.id}`)'>编辑</a-button>
           <a-button type='primary' v-if='record.reviewStatus===PIC_REVIEW_STATUS_ENUM.REVIEWING'
                     @click='doReview(record.id,PIC_REVIEW_STATUS_ENUM.PASS)'>通过</a-button>
           <a-button danger v-if='record.reviewStatus===PIC_REVIEW_STATUS_ENUM.REVIEWING' type='link'
