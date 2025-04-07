@@ -1,39 +1,32 @@
-# ph-picture
+# 跃金图库前端代码
 
-This template should help get you started developing with Vue 3 in Vite.
+## 技术栈
 
-## Recommended IDE Setup
+1. 框架：Vue3
+2. 语言： TypeScript
+3. 仓库管理：Pinia
+4. UI框架： Ant Design of Vue
+5. 路由：Vue Router
+6. 请求工具：Axios
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 基本界面
 
-## Type Support for `.vue` Imports in TS
+- 主界面：展示用户发布到公共图库的图片，使用了瀑布流布局展示公共图库的所有图片，并支持评论，分享，以图搜图
+- 个人图库界面：用户发布图片到自己的空间的界面，不被外人看到的一些图片
+- 团队空间界面：可以让多人共同协作一个空间图库，支持多人共同编辑同一张图片
+- 个人发布界面：展示用户发布到公共空间的界面，展示图片的审核情况
+- 创建图片界面：支持用户上传图片到公共图库，个人图库和团队空间
+- 创建空间界面：支持用户创建自己的团队空间和个人空间
+- 空间分析界面：展示使用图表结构展示空间的使用情况（可以分析空间的使用情况，标签的占比，分类的占比，空间使用排名，用户的上传情况分析）
+- 用户登入和注册界面：用户的登入和注册
+- 批量抓取图片界面：使用关键词抓取图片
+- 图片详情界面：展示图片和图片的基本信息，并可以进行下载图片
+- 以图搜图界面：用图片进行搜图的界面
+- 个人中心：展示用户的基本信息（评论的信息，被评论的信息，个人的基本信息）
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## 管理界面
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- 用户管理界面：让系统的管理员管理所有用户的界面
+- 图片管理界面：展示所有的图片供系统管理员对图片进行操作并支持图片的审核功能，让系统管理员进行审核图片是否通过
+- 空间管理界面：展示所有的空间和空间的基本信息，可以让系统管理员进行修改，并可以使用图表分析公共图库和所有图库的基本情况
+- 空间成员管理界面：团队空间的创建者对空间成员的管理界面，可以拉人和修改权限
