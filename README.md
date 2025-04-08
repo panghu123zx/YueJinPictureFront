@@ -44,4 +44,22 @@
 3. 生产构建：`npm run build`
 
 # 图片展示
-
+![主页展示](./showPic/home.png)
+![添加图片](./showPic/addPic.png)
+![ai扩图](./showPic/ai扩图.png)
+![评论](./showPic/comment.png)
+![编辑图片](./showPic/editpic.png)
+![个人空间界面](./showPic/个人空间界面.png)
+![以图搜图](./showPic/以图搜图.png)
+![创建空间](./showPic/创建团队.png)
+![团队界面](./showPic/团队界面.png)
+![团队协作](./showPic/团队协作.png)
+![图片详情](./showPic/图片详情.png)
+![我的上传](./showPic/我的上传.png)
+![批量抓图](./showPic/批量抓图.png)
+![用户中心](./showPic/用户中心.png)
+![空间分析](./showPic/空间分析.png)
+![颜色搜索](./showPic/颜色搜索.png)
+![图片管理界面](./showPic/picManage.png)
+![用户管理](./showPic/userManager.png)
+![空间管理](./showPic/spaceManager.png)
