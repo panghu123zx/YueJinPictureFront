@@ -1,57 +1,66 @@
 <template>
-  <a-flex justify='space-between'>
+  <a-flex justify="space-between">
     <h2>图片管理</h2>
-    <a-button type='primary' @click='router.push("/addpicture/batch")'>批量获取图片</a-button>
+    <a-button type="primary" @click="router.push('/addpicture/batch')">批量获取图片</a-button>
   </a-flex>
 
   <!--  搜索-->
-  <a-form layout='inline' :model='searchParams'>
-    <a-form-item label='关键词'>
-      <a-input v-model:value='searchParams.searchText' placeholder='请输入关键词...' />
+  <a-form layout="inline" :model="searchParams">
+    <a-form-item label="关键词">
+      <a-input v-model:value="searchParams.searchText" placeholder="请输入关键词..." />
     </a-form-item>
-    <a-form-item label='分类' name='category'>
+    <a-form-item label="分类" name="category">
       <a-select
-        v-model:value='searchParams.category'
-        placeholder='请输入分类'
-        style='min-width: 180px'
+        v-model:value="searchParams.category"
+        placeholder="请输入分类"
+        style="min-width: 180px"
         allow-clear
       >
-        <a-select-option v-for='cat in categoryTagList?.categoryList' :key='cat'>{{ cat }}</a-select-option>
+        <a-select-option v-for="cat in categoryTagList?.categoryList" :key="cat">{{
+          cat
+        }}</a-select-option>
       </a-select>
     </a-form-item>
-    <a-form-item name='tags' label='标签'>
+    <a-form-item name="tags" label="标签">
       <a-select
-        v-model:value='searchParams.tags'
-        mode='tags'
-        placeholder='请输入标签'
-        style='min-width: 180px'
+        v-model:value="searchParams.tags"
+        mode="tags"
+        placeholder="请输入标签"
+        style="min-width: 180px"
         allow-clear
       >
-        <a-select-option v-for='tag in categoryTagList?.tagList' :key='tag'>{{ tag }}</a-select-option>
+        <a-select-option v-for="tag in categoryTagList?.tagList" :key="tag">{{
+          tag
+        }}</a-select-option>
       </a-select>
     </a-form-item>
-    <a-form-item label='审核状态' name='reviewStatus'>
+    <a-form-item label="审核状态" name="reviewStatus">
       <a-select
-        v-model:value='searchParams.reviewStatus'
-        placeholder='请输入审核状态'
-        style='min-width: 180px'
+        v-model:value="searchParams.reviewStatus"
+        placeholder="请输入审核状态"
+        style="min-width: 180px"
         allow-clear
       >
-        <a-select-option :key='1'>通过</a-select-option>
-        <a-select-option :key='2'>拒绝</a-select-option>
-        <a-select-option :key='0'>待审核</a-select-option>
+        <a-select-option :key="1">通过</a-select-option>
+        <a-select-option :key="2">拒绝</a-select-option>
+        <a-select-option :key="0">待审核</a-select-option>
       </a-select>
     </a-form-item>
     <a-form-item>
-      <a-button type='primary' @click='doSearch'>搜索</a-button>
+      <a-button type="primary" @click="doSearch">搜索</a-button>
     </a-form-item>
   </a-form>
-  <div style='margin-bottom: 16px;'></div>
+  <div style="margin-bottom: 16px"></div>
   <!--  数据-->
-  <a-table :columns='columns' :data-source='dataList' :pagination='paginationParams' @change='doPagination'>
-    <template #bodyCell='{ column, record }'>
+  <a-table
+    :columns="columns"
+    :data-source="dataList"
+    :pagination="paginationParams"
+    @change="doPagination"
+  >
+    <template #bodyCell="{ column, record }">
       <template v-if="column.dataIndex === 'url'">
-        <a-image :src='record.url' :width='100' />
+        <a-image :src="record.url" :width="100" />
       </template>
       <template v-if="column.dataIndex === 'picInfo'">
         <div>宽度：{{ record.picWidth }}</div>
@@ -66,11 +75,11 @@
         <div>审核信息：{{ record.reviewMessage }}</div>
       </template>
       <template v-if="column.dataIndex === 'category'">
-        <a-tag color='green'>{{ record.category || '' }}</a-tag>
+        <a-tag color="green">{{ record.category || '' }}</a-tag>
       </template>
       <template v-if="column.dataIndex === 'tags'">
         <a-space wrap>
-          <a-tag v-for="tag in JSON.parse(record.tags || '[]')" :key='tag'>{{ tag }}</a-tag>
+          <a-tag v-for="tag in JSON.parse(record.tags || '[]')" :key="tag">{{ tag }}</a-tag>
         </a-space>
       </template>
       <template v-if="column.dataIndex === 'createTime'">
@@ -82,91 +91,96 @@
       <template v-else-if="column.key === 'action'">
         <span>
           <a-space wrap>
-            <a-button @click='router.push(`/addpicture?id=${record.id}`)'>编辑</a-button>
-          <a-button type='primary' v-if='record.reviewStatus===PIC_REVIEW_STATUS_ENUM.REVIEWING'
-                    @click='doReview(record.id,PIC_REVIEW_STATUS_ENUM.PASS)'>通过</a-button>
-          <a-button danger v-if='record.reviewStatus===PIC_REVIEW_STATUS_ENUM.REVIEWING' type='link'
-                    @click='doReview(record.id,PIC_REVIEW_STATUS_ENUM.REJECT)'>拒绝</a-button>
-          <a-button type='primary' danger @click='doDeletePicture(record.id)'>删除</a-button>
+            <a-button @click="router.push(`/addpicture?id=${record.id}`)">编辑</a-button>
+            <a-button
+              type="primary"
+              v-if="record.reviewStatus === PIC_REVIEW_STATUS_ENUM.REVIEWING"
+              @click="doReview(record.id, PIC_REVIEW_STATUS_ENUM.PASS)"
+              >通过</a-button
+            >
+            <a-button
+              danger
+              v-if="record.reviewStatus === PIC_REVIEW_STATUS_ENUM.REVIEWING"
+              type="link"
+              @click="doReview(record.id, PIC_REVIEW_STATUS_ENUM.REJECT)"
+              >拒绝</a-button
+            >
+            <a-button type="primary" danger @click="doDeletePicture(record.id)">删除</a-button>
           </a-space>
         </span>
       </template>
     </template>
   </a-table>
 </template>
-<script lang='ts' setup>
-import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue'
+<script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { deleteUserUsingPost, getListUserByPageUsingPost } from '../../api/userController'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
-import Api from '@vitejs/plugin-vue'
+
 import {
   deletePictureUsingPost,
   getListPictureUsingPost,
-  listPictureTagCategoryUsingGet, pictureReviewUsingPost
+  listPictureTagCategoryUsingGet,
+  pictureReviewUsingPost,
 } from '../../api/pictureController'
 import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_MAP } from '../../constants/picture'
 import { useRouter } from 'vue-router'
 
-
 const router = useRouter()
-
 
 const columns = [
   {
     title: 'id',
     dataIndex: 'id',
-    width: 80
+    width: 80,
   },
   {
     title: '图片',
-    dataIndex: 'url'
+    dataIndex: 'url',
   },
   {
     title: '名称',
-    dataIndex: 'name'
+    dataIndex: 'name',
   },
   {
     title: '简介',
     dataIndex: 'introduction',
-    ellipsis: true
+    ellipsis: true,
   },
   {
     title: '类型',
-    dataIndex: 'category'
+    dataIndex: 'category',
   },
   {
     title: '标签',
-    dataIndex: 'tags'
+    dataIndex: 'tags',
   },
   {
     title: '图片信息',
-    dataIndex: 'picInfo'
+    dataIndex: 'picInfo',
   },
   {
     title: '用户 id',
     dataIndex: 'userId',
-    width: 80
+    width: 80,
   },
   {
     title: '审核信息',
-    dataIndex: 'reviewMessage'
+    dataIndex: 'reviewMessage',
   },
   {
     title: '创建时间',
-    dataIndex: 'createTime'
+    dataIndex: 'createTime',
   },
   {
     title: '编辑时间',
-    dataIndex: 'editTime'
+    dataIndex: 'editTime',
   },
   {
     title: '操作',
-    key: 'action'
-  }
+    key: 'action',
+  },
 ]
-
 
 //初始数据
 const dataList = ref<API.PictureQueryDto[]>([])
@@ -179,7 +193,7 @@ const searchParams = reactive<API.PictureQueryDto>({
   current: 1,
   pageSize: 5,
   sortField: 'createTime',
-  sortOrder: 'descend'
+  sortOrder: 'descend',
 })
 
 const paginationParams = computed(() => {
@@ -188,10 +202,9 @@ const paginationParams = computed(() => {
     current: searchParams.current,
     pageSize: searchParams.pageSize,
     showSizeChanger: true,
-    showTotal: (total) => `共${total}条`
+    showTotal: (total) => `共${total}条`,
   }
 })
-
 
 /**
  * 初始化数据
@@ -199,7 +212,7 @@ const paginationParams = computed(() => {
 const fetchPictureList = async () => {
   const res = await getListPictureUsingPost({
     ...searchParams,
-    queryPublic: true
+    queryPublic: true,
   })
   if (res.code === 0) {
     dataList.value = res.data.records ?? []
@@ -215,7 +228,6 @@ const fetchCategoryAndTags = async () => {
     categoryTagList.value = res.data
   }
 }
-
 
 /**
  * 页面加载时获取数据
@@ -263,7 +275,7 @@ const doReview = async (id, status) => {
   const res = await pictureReviewUsingPost({
     id: id,
     reviewStatus: status,
-    reviewMessage
+    reviewMessage,
   })
   if (res.code === 0) {
     message.success('审核成功')
@@ -276,7 +288,5 @@ const doReview = async (id, status) => {
 
 <style scoped>
 .search-button {
-
 }
-
 </style>
