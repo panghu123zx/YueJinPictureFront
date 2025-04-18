@@ -11,7 +11,7 @@
         </a-layout-content>
       </a-layout>
       <a-layout-footer class='footer'>
-        <a href='https://github.com/panghu123zx' target='_blank' style='color: #aba5a5'>胖虎图库 by 胖虎</a>
+        <a href='https://github.com/panghu123zx' target='_blank' style='color: #aba5a5'>跃金图库 by 胖虎</a>
       </a-layout-footer>
     </a-layout>
   </div>

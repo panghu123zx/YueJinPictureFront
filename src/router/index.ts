@@ -11,6 +11,7 @@ import SpaceDetailPage from '../pages/SpaceDetailPage.vue'
 import SpaceAnalyzePage from '../pages/SpaceAnalyzePage.vue'
 import SpaceUserManagerPage from '../pages/SpaceUserManagerPage.vue'
 import ImageByPictureSearch from '../pages/ImageByPictureSearch.vue'
+import MyLikeSharePic from '../pages/MyLikeSharePic.vue'
 import UserLoginPage from '../pages/user/UserLoginPage.vue'
 import UserRegisterPage from '../pages/user/UserRegisterPage.vue'
 import UserManagerPage from '../pages/admin/UserManagerPage.vue'
@@ -101,6 +102,11 @@ const router = createRouter({
       path: '/space_analyze',
       name: 'spaceAnalyze',
       component: SpaceAnalyzePage
+    },
+    {
+      path: '/likesharepic',
+      name: 'likesharepic',
+      component: MyLikeSharePic
     },
     {
       path: '/spaceUserManage/:id',

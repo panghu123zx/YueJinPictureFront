@@ -458,6 +458,7 @@ declare namespace API {
     commentCount?: number
     current?: number
     endEditTime?: string
+    homeShow?: string
     id?: number
     introduction?: string
     likeCount?: number

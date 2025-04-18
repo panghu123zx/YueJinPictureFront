@@ -53,6 +53,7 @@
                     <DeleteOutlined />
                     <span style='font-size: 11px;'>删除</span>
                   </a-space>
+                  <span style='margin-left: 16px;' @click='replyChildComment(childItem)'>回复</span>
                 </template>
                 <template #content>
                   <p>
@@ -92,7 +93,7 @@ import {
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { LikeFilled, LikeOutlined, DeleteOutlined } from '@ant-design/icons-vue'
-import _default from 'ant-design-vue/es/vc-slick/inner-slider'
+
 
 
 interface Props {
@@ -126,6 +127,16 @@ const replyComment = async (item) => {
     parentId: item.id
   }
 }
+
+const replyChildComment=(childItem)=>{
+  isShow.value=true
+  params.value={
+    parentId: childItem.parentId,
+    fromName: childItem.userName,
+    fromId: childItem.userId,
+  }
+}
+
 /**
  * 取消回复
  */

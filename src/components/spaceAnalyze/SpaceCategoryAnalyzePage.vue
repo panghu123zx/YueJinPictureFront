@@ -11,9 +11,8 @@
 import VChart from 'vue-echarts'
 import 'echarts'
 import { computed, defineProps, onMounted, ref } from 'vue'
-import { spaceCategoryAnalyzeUsingPost, spaceUsageAnalyzeUsingPost } from '../../api/spaceAnalyzeController'
+import { spaceCategoryAnalyzeUsingPost } from '../../api/spaceAnalyzeController'
 import { message } from 'ant-design-vue'
-import { formatSize } from '../../utils/index'
 
 interface Props {
   queryPublic: boolean

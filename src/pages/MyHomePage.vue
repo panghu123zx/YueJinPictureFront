@@ -57,6 +57,7 @@
           <a-collapse-panel header='编辑资料'  @click='changeUserInfo'/>
           <a-collapse-panel  header='修改密码' @click='changeUserPwd'/>
           <a-collapse-panel  header='评论我的评论历史' @click='getCommentMy'/>
+          <a-collapse-panel  header='我喜欢的图片' @click='router.push("/likesharepic")'/>
           <a-collapse-panel  header='关于图库' @click='toMyGithub'/>
           <a-collapse-panel  header='退出登入' @click='doLogout'/>
         </a-collapse>

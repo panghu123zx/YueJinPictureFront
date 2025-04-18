@@ -1,6 +1,6 @@
 <template>
   <div id='userRegister'>
-    <h2 class='title'>胖虎图库-用户注册</h2>
+    <h2 class='title'>跃金图库-用户注册</h2>
     <div class='desc'>致力于打造更好的图片服务平台</div>
     <a-form
       :model='formState'

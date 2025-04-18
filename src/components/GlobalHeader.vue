@@ -90,6 +90,16 @@ const originItems = [
     key: '/admin/spacemanager',
     label: '空间管理',
     title: '空间管理'
+  },
+  {
+    key: '/likesharepic',
+    label: '图片点赞',
+    title: '图片点赞'
+  },
+  {
+    key: 'other',
+    label: h('a',{href: 'http://101.37.170.234'},'胖虎OJ'),
+    title: '胖虎OJ'
   }
 
 ]

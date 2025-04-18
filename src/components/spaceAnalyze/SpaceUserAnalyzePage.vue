@@ -18,13 +18,9 @@ import VChart from 'vue-echarts'
 import 'echarts'
 import { computed, defineProps, onMounted, ref, watchEffect } from 'vue'
 import {
-  spaceCategoryAnalyzeUsingPost,
-  spaceSizeAnalyzeUsingPost,
-  spaceUsageAnalyzeUsingPost, spaceUserAnalyzeUsingPost
+spaceUserAnalyzeUsingPost
 } from '../../api/spaceAnalyzeController'
 import { message } from 'ant-design-vue'
-import { formatSize } from '../../utils/index'
-import { useLoginuserStore } from '../../stores/loginuserStore'
 
 interface Props {
   queryPublic: boolean

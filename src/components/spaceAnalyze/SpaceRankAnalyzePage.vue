@@ -10,16 +10,11 @@
 <script setup lang='ts'>
 import VChart from 'vue-echarts'
 import 'echarts'
-import { computed, defineProps, onMounted, ref, watchEffect } from 'vue'
+import { computed, defineProps, onMounted, ref } from 'vue'
 import {
   spaceAnalyzeUsingPost,
-  spaceCategoryAnalyzeUsingPost,
-  spaceSizeAnalyzeUsingPost,
-  spaceUsageAnalyzeUsingPost, spaceUserAnalyzeUsingPost
 } from '../../api/spaceAnalyzeController'
 import { message } from 'ant-design-vue'
-import { formatSize } from '../../utils/index'
-import { useLoginuserStore } from '../../stores/loginuserStore'
 
 interface Props {
   topN: number

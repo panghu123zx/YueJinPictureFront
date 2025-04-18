@@ -97,8 +97,7 @@ const selectTagsList = ref<string[]>([])
 const searchParams = reactive<API.PictureQueryDto>({
   current: 1,
   pageSize: 12,
-  sortField: 'createTime',
-  sortOrder: 'descend'
+  homeShow: 'home'
 })
 
 
