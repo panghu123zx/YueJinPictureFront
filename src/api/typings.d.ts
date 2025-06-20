@@ -2,7 +2,6 @@ declare namespace API {
   type AddCommentDto = {
     content?: string
     fromId?: number
-    fromName?: string
     parentId?: number
     targetId?: number
     targetType?: number
@@ -226,16 +225,14 @@ declare namespace API {
     content?: string
     createTime?: string
     fromId?: number
-    fromName?: string
     id?: number
     likeCount?: number
     parentId?: number
     targetId?: number
     targetType?: number
     updateTime?: string
-    userAvatar?: string
     userId?: number
-    userName?: string
+    userVO?: UserVO
   }
 
   type CreateOutPaintingTaskVo = {

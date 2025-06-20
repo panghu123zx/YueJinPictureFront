@@ -100,7 +100,6 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { deleteUserUsingPost, getListUserByPageUsingPost } from '../../api/userController'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
-import Api from '@vitejs/plugin-vue'
 import {
   deletePictureUsingPost,
   getListPictureUsingPost,

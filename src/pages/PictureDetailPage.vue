@@ -146,6 +146,7 @@ const doDelete = async () => {
   })
   if (res.code == 0) {
     message.success('删除成功')
+    router.push('/')
   } else {
     message.error('删除失败')
   }

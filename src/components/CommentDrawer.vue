@@ -11,8 +11,8 @@
       >
         <template #renderItem='{ item }'>
           <a-list-item>
-            <a-comment :author="item?.userName ?? '无名'"
-                       :avatar="item?.userAvatar  ">
+            <a-comment :author="item?.userVO.userName ?? '无名'"
+                       :avatar="item?.userVO.userAvatar  ">
               <template #actions>
                 <a-space>
                   <LikeOutlined @click='doAddLike(item)' v-if='likeComment.indexOf(item.id)===-1' />
@@ -41,8 +41,8 @@
               <a-comment
                 v-for='childItem in item.commentVOChildList'
                 :key='childItem.id'
-                :author="`${childItem.userName ?? '无名'} ▶ ${childItem.fromName ?? '无名'}`"
-                :avatar="childItem?.userAvatar ">
+                :author="`${childItem.userVO?.userName ?? '无名'} ▶ ${item?.userVO.userName ?? '无名'}`"
+                :avatar="childItem.userVO?.userAvatar ">
                 <template #actions>
                   <a-space>
                     <LikeOutlined @click='doAddLike(childItem)' v-if='likeComment.indexOf(childItem.id)===-1' />
@@ -122,7 +122,6 @@ const isShow = ref(false)
 const replyComment = async (item) => {
   isShow.value = true
   params.value = {
-    fromName: item.userName,
     fromId: item.userId,
     parentId: item.id
   }
@@ -132,7 +131,6 @@ const replyChildComment=(childItem)=>{
   isShow.value=true
   params.value={
     parentId: childItem.parentId,
-    fromName: childItem.userName,
     fromId: childItem.userId,
   }
 }

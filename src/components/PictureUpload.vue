@@ -6,7 +6,7 @@
       :before-upload='beforeUpload'
       :custom-request='handleUpload'
     >
-      <img v-if='picture?.url' :src='picture?.url' alt='avatar' style='max-height: 280px' />
+      <img v-if='picture?.url' :src='picture?.url' alt='avatar' style='max-height: 390px' />
       <div v-else>
         <loading-outlined v-if='loading'></loading-outlined>
         <plus-outlined v-else></plus-outlined>

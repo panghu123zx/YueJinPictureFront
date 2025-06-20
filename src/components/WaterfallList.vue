@@ -140,7 +140,7 @@ const toPictureDetail = (item) => {
  */
 const fetchMyLike = async () => {
   const res = await getMyLikeUsingGet()
-  if (res.code === 0) {
+  if (res.code === 0 && res.data) {
     res.data?.likePic?.forEach(item => {
       isLike.value.push(item.id)
     })
@@ -187,7 +187,7 @@ const addlike = async (item) => {
     targetType: 0
   })
   if (res.code === 0) {
-    message.success('点赞成功')
+    message.success('图片不错，点个赞')
     item.likeCount++
   } else {
     message.error('点赞失败')
