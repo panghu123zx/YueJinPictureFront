@@ -32,7 +32,7 @@
       <a-spin size='large' tip='加载中...' />
     </div>
     <div v-else>
-      <WaterfallList :loading='loading' :dataList='dataList' :showOptions='false' />
+      <WaterfallList2 :loading='loading' :dataList='dataList' :showOptions='false' />
     </div>
 
     <a-empty v-if='dataList.length===0' />
@@ -58,14 +58,13 @@
 <script setup lang='ts'>
 import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import {
-
   getListPictureByVoUsingPost,
   listPictureTagCategoryUsingGet
 } from '../api/pictureController'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { RocketTwoTone } from '@ant-design/icons-vue'
-import WaterfallList from '../components/WaterfallList.vue'
+import WaterfallList2 from '../components/WaterfallList2.vue'
 import { Empty } from 'ant-design-vue'
 
 const router = useRouter()
