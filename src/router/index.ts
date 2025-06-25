@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../pages/HomeView.vue'
+import ForumPage from '../pages/ForumPage.vue'
 import MySpacePage from '../pages/MySpacePage.vue'
 import AddPicture from '../pages/AddPicture.vue'
 import AddPictureBatch from '../pages/AddPictureBatch.vue'
@@ -109,12 +110,16 @@ const router = createRouter({
       component: MyLikeSharePic
     },
     {
+      path: '/forum',
+      name: 'forum',
+      component: ForumPage
+    },
+    {
       path: '/spaceUserManage/:id',
       name: 'spaceUserManage',
       component: SpaceUserManagerPage,
       props: true
     },
-
   ]
 })
 

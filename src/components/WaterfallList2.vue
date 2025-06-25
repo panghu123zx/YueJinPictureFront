@@ -109,8 +109,7 @@ import 'vue-waterfall-plugin-next/dist/style.css'
 import { useRouter } from 'vue-router'
 import {
   addUserLikeUsingPost,
-  addUserShareUsingPost,
-  getMyLikeUsingGet,
+  addUserShareUsingPost, getMyLikeUsingPost,
   unUserLikeUsingPost
 } from '../api/userLikeController'
 import { message } from 'ant-design-vue'
@@ -203,10 +202,12 @@ const toPictureDetail = (item) => {
  * 获取我的喜欢
  */
 const fetchMyLike = async () => {
-  const res = await getMyLikeUsingGet()
+  const res = await getMyLikeUsingPost({
+    targetType: 0
+  })
   if (res.code === 0 && res.data) {
     res.data?.likePic?.forEach(item => {
-      isLike.value.push(item.id)
+        isLike.value.push(item)
     })
   }
 }

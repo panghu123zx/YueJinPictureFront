@@ -7,6 +7,13 @@ declare namespace API {
     targetType?: number
   }
 
+  type addForumUsingPOSTParams = {
+    category?: string
+    content?: string
+    title?: string
+    url?: string
+  }
+
   type BaseResponseBoolean_ = {
     code?: number
     data?: boolean
@@ -16,6 +23,18 @@ declare namespace API {
   type BaseResponseCreateOutPaintingTaskVo_ = {
     code?: number
     data?: CreateOutPaintingTaskVo
+    message?: string
+  }
+
+  type BaseResponseForum_ = {
+    code?: number
+    data?: Forum
+    message?: string
+  }
+
+  type BaseResponseForumVO_ = {
+    code?: number
+    data?: ForumVO
     message?: string
   }
 
@@ -112,6 +131,18 @@ declare namespace API {
   type BaseResponsePageCommentVO_ = {
     code?: number
     data?: PageCommentVO_
+    message?: string
+  }
+
+  type BaseResponsePageForum_ = {
+    code?: number
+    data?: PageForum_
+    message?: string
+  }
+
+  type BaseResponsePageForumVO_ = {
+    code?: number
+    data?: PageForumVO_
     message?: string
   }
 
@@ -256,6 +287,96 @@ declare namespace API {
     filePath?: string
   }
 
+  type Forum = {
+    category?: string
+    commentCount?: number
+    content?: string
+    createTime?: string
+    id?: number
+    isDelete?: number
+    likeCount?: number
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewerId?: number
+    shareCount?: number
+    thumbnailUrl?: string
+    title?: string
+    updateTime?: string
+    url?: string
+    userId?: number
+    viewCount?: number
+  }
+
+  type ForumAddDto = {
+    category?: string
+    content?: string
+    title?: string
+    url?: string
+  }
+
+  type ForumQueryDto = {
+    category?: string
+    commentCount?: number
+    content?: string
+    current?: number
+    id?: number
+    likeCount?: number
+    pageSize?: number
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewerId?: number
+    shareCount?: number
+    sortField?: string
+    sortOrder?: string
+    title?: string
+    userId?: number
+    viewCount?: number
+  }
+
+  type ForumReviewDto = {
+    id?: number
+    reviewMessage?: string
+    reviewStatus?: number
+  }
+
+  type ForumUpdateDto = {
+    category?: string
+    content?: string
+    id?: number
+    title?: string
+    url?: string
+  }
+
+  type ForumVO = {
+    category?: string
+    commentCount?: number
+    content?: string
+    createTime?: string
+    id?: number
+    likeCount?: number
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewerId?: number
+    shareCount?: number
+    thumbnailUrl?: string
+    title?: string
+    updateTime?: string
+    url?: string
+    userId?: number
+    userVO?: UserVO
+    viewCount?: number
+  }
+
+  type getForumUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
+  type getForumVOUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
   type getOutPaintingTaskUsingGETParams = {
     /** taskId */
     taskId?: string
@@ -338,6 +459,22 @@ declare namespace API {
     current?: number
     pages?: number
     records?: CommentVO[]
+    size?: number
+    total?: number
+  }
+
+  type PageForum_ = {
+    current?: number
+    pages?: number
+    records?: Forum[]
+    size?: number
+    total?: number
+  }
+
+  type PageForumVO_ = {
+    current?: number
+    pages?: number
+    records?: ForumVO[]
     size?: number
     total?: number
   }
@@ -784,11 +921,23 @@ declare namespace API {
     targetType?: number
   }
 
+  type UserLikeQueryDto = {
+    current?: number
+    likeShare?: number
+    pageSize?: number
+    sortField?: string
+    sortOrder?: string
+    targetId?: number
+    targetType?: number
+  }
+
   type UserLikeVO = {
     createTime?: string
     id?: number
-    likePic?: PictureVO[]
+    likePic?: string[]
+    likePicVO?: PictureVO[]
     likePost?: string[]
+    likePostVO?: ForumVO[]
     likeShare?: number
     targetType?: number
     userAvatar?: string

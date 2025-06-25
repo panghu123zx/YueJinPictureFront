@@ -32,8 +32,26 @@ export async function addUserShareUsingPost(
   })
 }
 
+/** getLikePost POST /api/userlike/get/likeforum */
+export async function getLikePostUsingPost(
+  body: API.UserLikeQueryDto,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePageForum_>('/api/userlike/get/likeforum', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** getLikePic POST /api/userlike/get/likepic */
-export async function getLikePicUsingPost(body: API.PageRequest, options?: { [key: string]: any }) {
+export async function getLikePicUsingPost(
+  body: API.UserLikeQueryDto,
+  options?: { [key: string]: any }
+) {
   return request<API.BaseResponsePagePicture_>('/api/userlike/get/likepic', {
     method: 'POST',
     headers: {
@@ -44,12 +62,12 @@ export async function getLikePicUsingPost(body: API.PageRequest, options?: { [ke
   })
 }
 
-/** getSharePic POST /api/userlike/get/sharepic */
-export async function getSharePicUsingPost(
-  body: API.PageRequest,
+/** getMyLike POST /api/userlike/getMyLike */
+export async function getMyLikeUsingPost(
+  body: API.UserLikeAddDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePagePicture_>('/api/userlike/get/sharepic', {
+  return request<API.BaseResponseUserLikeVO_>('/api/userlike/getMyLike', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -59,18 +77,17 @@ export async function getSharePicUsingPost(
   })
 }
 
-/** getMyLike GET /api/userlike/getMyLike */
-export async function getMyLikeUsingGet(options?: { [key: string]: any }) {
-  return request<API.BaseResponseUserLikeVO_>('/api/userlike/getMyLike', {
-    method: 'GET',
-    ...(options || {}),
-  })
-}
-
-/** getMyShare GET /api/userlike/getMyShare */
-export async function getMyShareUsingGet(options?: { [key: string]: any }) {
+/** getMyShare POST /api/userlike/getMyShare */
+export async function getMyShareUsingPost(
+  body: API.UserLikeAddDto,
+  options?: { [key: string]: any }
+) {
   return request<API.BaseResponseUserLikeVO_>('/api/userlike/getMyShare', {
-    method: 'GET',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   })
 }

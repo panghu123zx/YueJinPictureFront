@@ -4,6 +4,7 @@
 // API 唯一标识：
 import * as spaceAnalyzeController from './spaceAnalyzeController'
 import * as commentController from './commentController'
+import * as forumController from './forumController'
 import * as mainController from './mainController'
 import * as pictureController from './pictureController'
 import * as spaceController from './spaceController'
@@ -14,6 +15,7 @@ import * as userLikeController from './userLikeController'
 export default {
   spaceAnalyzeController,
   commentController,
+  forumController,
   mainController,
   pictureController,
   spaceController,

@@ -34,8 +34,10 @@ import { CheckCircleOutlined ,CloseCircleOutlined,DashOutlined } from '@ant-desi
 import 'vue3-colorpicker/style.css'
 import { useLoginuserStore } from '../stores/loginuserStore'
 import { PIC_REVIEW_STATUS_OPTIONS,PIC_REVIEW_STATUS_ENUM } from '../constants/picture'
+import { TARGET_TYPE_ENUM } from '../constants/targetType'
+import { LIKE_TYPE_ENUM } from '../constants/likeShare'
 import { getLoginUserUsingGet } from '../api/userController'
-import { getLikePicUsingPost, getSharePicUsingPost } from '../api/userLikeController'
+import { getLikePicUsingPost } from '../api/userLikeController'
 
 
 const pictureList = ref<API.PictureVO[]>()
@@ -57,7 +59,9 @@ const pagination = {
 const fetchMyPicture = async () => {
   loading.value = true
 
-  const res = await getLikePicUsingPost({})
+  const res = await getLikePicUsingPost({
+    targetType: TARGET_TYPE_ENUM.PICTURE
+  })
   if (res.code === 0) {
     pictureList.value = res.data.records ?? []
     total.value = res.data.total ?? 0
@@ -72,7 +76,10 @@ const fetchMyPicture = async () => {
 const fetchMySharePicture = async () => {
   loading.value = true
 
-  const res = await getSharePicUsingPost({})
+  const res = await getLikePicUsingPost({
+    targetType: TARGET_TYPE_ENUM.PICTURE,
+    likeShare: LIKE_TYPE_ENUM.SHARE
+  })
   if (res.code === 0) {
     pictureList.value = res.data.records ?? []
     total.value = res.data.total ?? 0
