@@ -6,6 +6,7 @@ import AddPicture from '../pages/AddPicture.vue'
 import AddPictureBatch from '../pages/AddPictureBatch.vue'
 import AddSpacePage from '../pages/AddSpacePage.vue'
 import PictureDetailPage from '../pages/PictureDetailPage.vue'
+import ForumDetailPage from '../pages/ForumDetailPage.vue'
 import MyHomePage from '../pages/MyHomePage.vue'
 import MyUploadPage from '../pages/MyUploadPage.vue'
 import SpaceDetailPage from '../pages/SpaceDetailPage.vue'
@@ -76,6 +77,12 @@ const router = createRouter({
       path: '/picture/:id',
       name: 'picturedetail',
       component: PictureDetailPage,
+      props: true
+    },
+    {
+      path: '/forum/:id',
+      name: 'forumdetail',
+      component: ForumDetailPage,
       props: true
     },
     {

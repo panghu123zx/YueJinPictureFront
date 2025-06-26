@@ -1,80 +1,80 @@
 <template>
   <div class='page-b-content'>
-    <div class="waterfall-container">
+    <div class='waterfall-container'>
       <Waterfall
-        :list="dataList"
-        :width="300"
-        :breakpoints="breakpoints"
+        :list='dataList'
+        :width='300'
+        :breakpoints='breakpoints'
       >
-        <template #default="{ item, url }">
+        <template #default='{ item, url }'>
           <div
-            class="custom-card"
-            @mouseenter="handleMouseEnter(item.id)"
-            @mouseleave="handleMouseLeave(item.id)"
+            class='custom-card'
+            @mouseenter='handleMouseEnter(item.id)'
+            @mouseleave='handleMouseLeave(item.id)'
           >
             <!-- 图片容器 -->
-            <div class="image-wrap">
+            <div class='image-wrap'>
               <LazyImg
-                :url="item.thumbnailUrl ?? item.url"
-                @click="toPictureDetail(item)"
-                class="card-image"
+                :url='item.thumbnailUrl ?? item.url'
+                @click='toPictureDetail(item)'
+                class='card-image'
               />
               <!-- 常驻浏览量 -->
-              <div class="views">
+              <div class='views'>
                 <EyeOutlined />
                 {{ item.viewCount }}
               </div>
 
               <!-- 悬浮显示的作者信息（左下角） -->
-              <transition name="fade-in">
+              <transition name='fade-in'>
                 <div
-                  v-if="hoverStates[item.id]"
-                  class="author-info"
+                  v-if='hoverStates[item.id]'
+                  class='author-info'
                 >
                   <a-avatar
-                    v-if="item.user.userAvatar"
-                    :src="item.user.userAvatar"
-                    class="author-avatar"
+                    v-if='item.user.userAvatar'
+                    :src='item.user.userAvatar'
+                    class='author-avatar'
                   />
-                  <span class="author-name">{{ item.user.userName }}</span>
+                  <span class='author-name'>{{ item.user.userName }}</span>
                 </div>
               </transition>
             </div>
 
             <!-- 悬浮显示的操作按钮（右侧） -->
             <transition-group
-              name="slide-right"
-              class="hover-actions"
-              tag="div"
+              name='slide-right'
+              class='hover-actions'
+              tag='div'
               :class="{ 'show': hoverStates[item.id] }"
             >
               <div
-                v-if="hoverStates[item.id]"
+                v-if='hoverStates[item.id]'
                 :key="item.id + '-hover'"
               >
-                <div class="actions">
-                  <a-space direction="vertical">
+                <div class='actions'>
+                  <a-space direction='vertical'>
                     <a-space>
                       <LikeOutlined
-                        @click="addlike(item)"
-                        v-if="isLike.indexOf(item.id) === -1"
+                        @click='addlike(item)'
+                        v-if='isLike.indexOf(item.id) === -1'
                       />
                       <LikeTwoTone
-                        @click="unlike(item)"
+                        @click='unlike(item)'
                         v-else
-                        two-tone-color="#f5a0af"
+                        two-tone-color='#f5a0af'
                       />
                       {{ item.likeCount }}
                     </a-space>
-                    <a-space @click="doSharePicture(item)">
+                    <a-space @click='doSharePicture(item)'>
                       <ShareAltOutlined />
                       {{ item.shareCount }}
                     </a-space>
-                    <a-space @click="toComment(item)">
+                    <a-space @click='toComment(item)'>
                       <CommentOutlined />
                       {{ item.commentCount }}
                     </a-space>
-                    <a-space @click="toImageByPic(item)">
+                    <a-space @click='toImageByPic(item)'>
                       <SearchOutlined />
                     </a-space>
                   </a-space>
@@ -82,7 +82,7 @@
               </div>
             </transition-group>
             <!-- 常驻图片名称 -->
-            <div class="image-name">{{ item.name || '1' }}</div>
+            <div class='image-name' >{{ item.name || '1' }}</div>
           </div>
         </template>
       </Waterfall>
@@ -117,16 +117,16 @@ import Modal from '../components/ShareModal.vue'
 import CommentDrawer from './CommentDrawer.vue'
 
 //  hover 状态管理（避免多个卡片互相干扰）
-const hoverStates = ref({});
+const hoverStates = ref({})
 // 鼠标移入事件
 const handleMouseEnter = (id) => {
-  hoverStates.value[id] = true;
-};
+  hoverStates.value[id] = true
+}
 
 // 鼠标移出事件
 const handleMouseLeave = (id) => {
-  hoverStates.value[id] = false;
-};
+  hoverStates.value[id] = false
+}
 
 const router = useRouter()
 
@@ -207,7 +207,7 @@ const fetchMyLike = async () => {
   })
   if (res.code === 0 && res.data) {
     res.data?.likePic?.forEach(item => {
-        isLike.value.push(item)
+      isLike.value.push(item)
     })
   }
 }
@@ -269,11 +269,14 @@ const unlike = async (item) => {
     targetId: item.id,
     targetType: 0
   })
-  item.likeCount--
-  if (res.code === 0) {
-    message.success('取消点赞成功')
-  } else {
+  if (res.code !== 0) {
     message.error('取消点赞失败')
+    return;
+  }
+  item.likeCount--
+  const index = isLike.value.indexOf(item.id)
+  if(index > -1){
+    isLike.value.splice(index,1)
   }
   fetchMyLike()
 }
@@ -352,7 +355,7 @@ const toComment = (item) => {
   left: 8px;
   display: flex;
   align-items: center;
-  background: rgb(166, 153, 153 , 0.5);
+  background: rgb(166, 153, 153, 0.5);
   padding: 6px 10px;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -360,6 +363,7 @@ const toComment = (item) => {
   transform: translateY(10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
 /* 鼠标悬浮时显示作者信息 */
 .custom-card:hover .author-info {
   opacity: 1;
@@ -390,6 +394,7 @@ const toComment = (item) => {
   color: #333;
   margin-top: 4px;
 }
+
 /* 右侧滑入动画 */
 .slide-right-enter-active,
 .slide-right-leave-active {

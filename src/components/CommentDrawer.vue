@@ -97,7 +97,8 @@ import { LikeFilled, LikeOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 
 
 interface Props {
-  id: number | string
+  id: number | string,
+  targetType: number
 }
 
 const props = defineProps<Props>()
@@ -181,7 +182,7 @@ const doAddLike = async (item) => {
 const fetchCommentData = async () => {
   const res = await getTargetCommentUsingPost({
     targetId: props.id as number,
-    targetType: 0
+    targetType: props.targetType
   })
   if (res.code === 0 && res.data) {
     commentList.value = res.data
@@ -201,7 +202,7 @@ const doAddComment = async () => {
 
 
   params.value.targetId = props.id as number
-  params.value.targetType =0
+  params.value.targetType =props.targetType
   params.value.content = content.value
 
   const res = await addCommentUsingPost({

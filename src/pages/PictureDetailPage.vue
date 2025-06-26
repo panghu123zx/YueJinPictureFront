@@ -52,19 +52,16 @@
                 </template>
               </a-button>
               <a-button v-if='canEditPicture' type='default' @click='doEdit'  style='background-color: #ffc107; width: 45px'>
-
                 <template #icon>
                   <EditOutlined style='color: white; font-size: medium'/>
                 </template>
               </a-button>
               <a-button v-if='canDeletePicture'  @click='doDelete'  style='background-color: #f44336; width: 45px'>
-
                 <template #icon>
                   <DeleteOutlined style='color: white; font-size: medium'/>
                 </template>
               </a-button>
               <a-button   @click='toComment' v-if='!picture?.spaceId' style='background-color: #ff9800; width: 45px'>
-
                 <template #icon>
                   <CommentOutlined style='color: white; font-size: medium'/>
                 </template>
@@ -77,7 +74,7 @@
     </a-col>
   </a-row>
   <Modal ref='modalRef' :link='link' :url='picture?.url'/>
-  <CommentDrawer ref='commentRef' :id='picture?.id'/>
+  <CommentDrawer ref='commentRef' :id='picture?.id' :targetType='0'/>
 </template>
 
 <script lang='ts' setup>
@@ -96,6 +93,7 @@ import CommentDrawer from '../components/CommentDrawer.vue'
 const props = defineProps<{
   id: string | number
 }>()
+
 const loginUserStore = useLoginuserStore()
 const picture = ref<API.PictureVO>()
 const router = useRouter()
