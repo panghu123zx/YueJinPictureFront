@@ -3,6 +3,7 @@ import HomeView from '../pages/HomeView.vue'
 import ForumPage from '../pages/ForumPage.vue'
 import MySpacePage from '../pages/MySpacePage.vue'
 import AddPicture from '../pages/AddPicture.vue'
+import AddForum from '../pages/AddForum.vue'
 import AddPictureBatch from '../pages/AddPictureBatch.vue'
 import AddSpacePage from '../pages/AddSpacePage.vue'
 import PictureDetailPage from '../pages/PictureDetailPage.vue'
@@ -19,6 +20,7 @@ import UserRegisterPage from '../pages/user/UserRegisterPage.vue'
 import UserManagerPage from '../pages/admin/UserManagerPage.vue'
 import SpaceManagerPage from '../pages/admin/SpaceManagerPage.vue'
 import PictureManagerPage from '../pages/admin/PictureManagerPage.vue'
+import ForumManagerPage from '../pages/admin/ForumManagerPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +49,11 @@ const router = createRouter({
       path: '/addpicture',
       name: 'addPicture',
       component: AddPicture
+    },
+    {
+      path: '/addforum',
+      name: 'addforum',
+      component: AddForum
     },
     {
       path: '/addpicture/batch',
@@ -100,6 +107,11 @@ const router = createRouter({
       path: '/admin/picturemanager',
       name: 'pictureManager',
       component: PictureManagerPage
+    },
+    {
+      path: '/admin/forummanager',
+      name: 'forumManager',
+      component: ForumManagerPage
     },
     {
       path: '/admin/spacemanager',

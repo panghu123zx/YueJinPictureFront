@@ -7,11 +7,13 @@ declare namespace API {
     targetType?: number
   }
 
-  type addForumUsingPOSTParams = {
-    category?: string
-    content?: string
-    title?: string
-    url?: string
+  type addForumFileUsingPOSTParams = {
+    fileUrl?: string
+    forumId?: number
+    id?: number
+    position?: number
+    sort?: number
+    type?: number
   }
 
   type BaseResponseBoolean_ = {
@@ -29,6 +31,12 @@ declare namespace API {
   type BaseResponseForum_ = {
     code?: number
     data?: Forum
+    message?: string
+  }
+
+  type BaseResponseForumFile_ = {
+    code?: number
+    data?: ForumFile
     message?: string
   }
 
@@ -53,6 +61,12 @@ declare namespace API {
   type BaseResponseListCommentVO_ = {
     code?: number
     data?: CommentVO[]
+    message?: string
+  }
+
+  type BaseResponseListForumFile_ = {
+    code?: number
+    data?: ForumFile[]
     message?: string
   }
 
@@ -299,10 +313,8 @@ declare namespace API {
     reviewStatus?: number
     reviewerId?: number
     shareCount?: number
-    thumbnailUrl?: string
     title?: string
     updateTime?: string
-    url?: string
     userId?: number
     viewCount?: number
   }
@@ -310,8 +322,42 @@ declare namespace API {
   type ForumAddDto = {
     category?: string
     content?: string
+    listForumFileId?: number[]
     title?: string
-    url?: string
+  }
+
+  type ForumFile = {
+    createTime?: string
+    forumId?: number
+    id?: number
+    isDelete?: number
+    picUrl?: string
+    position?: number
+    size?: number
+    sort?: number
+    thumbnailUrl?: string
+    type?: number
+    updateTime?: string
+  }
+
+  type ForumFileAddDto = {
+    fileUrl?: string
+    forumId?: number
+    id?: number
+    position?: number
+    sort?: number
+    type?: number
+  }
+
+  type ForumFileDeleteDto = {
+    ids?: number[]
+  }
+
+  type ForumFileQueryDto = {
+    forumId?: number
+    id?: number
+    sort?: number
+    type?: number
   }
 
   type ForumQueryDto = {
@@ -343,8 +389,8 @@ declare namespace API {
     category?: string
     content?: string
     id?: number
+    listForumFileId?: number[]
     title?: string
-    url?: string
   }
 
   type ForumVO = {
@@ -352,16 +398,15 @@ declare namespace API {
     commentCount?: number
     content?: string
     createTime?: string
+    forumFile?: ForumFile[]
     id?: number
     likeCount?: number
     reviewMessage?: string
     reviewStatus?: number
     reviewerId?: number
     shareCount?: number
-    thumbnailUrl?: string
     title?: string
     updateTime?: string
-    url?: string
     userId?: number
     userVO?: UserVO
     viewCount?: number

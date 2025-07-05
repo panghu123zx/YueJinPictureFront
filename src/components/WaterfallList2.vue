@@ -64,15 +64,12 @@
                         v-else
                         two-tone-color='#f5a0af'
                       />
-                      {{ item.likeCount }}
                     </a-space>
                     <a-space @click='doSharePicture(item)'>
                       <ShareAltOutlined />
-                      {{ item.shareCount }}
                     </a-space>
                     <a-space @click='toComment(item)'>
                       <CommentOutlined />
-                      {{ item.commentCount }}
                     </a-space>
                     <a-space @click='toImageByPic(item)'>
                       <SearchOutlined />

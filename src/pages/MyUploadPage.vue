@@ -1,9 +1,16 @@
 <template>
+  <a-space class='tagsTable'>
+    <a-button @click='getMyPic'  style='width: 100px;height: 40px;    background-color: rgb(237 226 209);color: #704c4c'>我的图片</a-button>
+    <a-button @click='getMyForum'  style='width: 100px;height: 40px;    background-color: rgb(237 226 209);color: #704c4c'>我的帖子</a-button>
+  </a-space>
   <!--  搜索-->
   <a-flex justify='space-between'>
     <a-form layout='inline' :model='searchParams'>
-      <a-form-item label='关键词'>
+      <a-form-item label='关键词' v-if='picOrForum ===0 '>
         <a-input v-model:value='searchParams.searchText' placeholder='请输入关键词...' />
+      </a-form-item>
+      <a-form-item label='名称' v-if='picOrForum ===1 '>
+        <a-input v-model:value='searchParams.name' placeholder='请输入名称...' />
       </a-form-item>
       <a-form-item label='分类' name='category'>
         <a-select
@@ -17,6 +24,7 @@
       </a-form-item>
       <a-form-item name='tags' label='标签'>
         <a-select
+          v-if='picOrForum===0'
           v-model:value='searchParams.tags'
           mode='tags'
           placeholder='请输入标签'
@@ -42,115 +50,110 @@
         </a-space>
       </a-form-item>
     </a-form>
-    <a-button type='primary' @click='router.push("/addpicture/batch")'>批量获取图片</a-button>
+    <a-button v-if='picOrForum===0' type='primary' @click='router.push("/addpicture/batch")'>批量获取图片</a-button>
   </a-flex>
   <div style='margin-bottom: 16px;' />
 
   <!-- 图片列表 -->
-  <a-list
-    :grid='{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }'
-    :data-source='pictureList'
-    :pagination='paginationParams'
-    :loading='loading'
-  >
-    <template #renderItem='{item :picture}'>
-      <a-list-item style='padding: 10px'>
-        <a-card hoverable style='width: 240px;' @click='doPictureDetail(picture)'>
-          <template #cover>
-            <img :alt='picture.name' :src='picture.thumbnailUrl ?? picture.url' style='height: 180px;object-fit: cover' loading='lazy' />
-          </template>
-          <a-card-meta :title='picture.name' />
-          <a-card-meta v-if='picture.reviewStatus === PIC_REVIEW_STATUS_ENUM.REVIEWING' description='待审阅' style='margin-top: 20px;'>
-            <template #avatar>
-              <DashOutlined  style='margin-left: 50px;'/>
-            </template>
-          </a-card-meta>
-          <a-card-meta v-if='picture.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS' description='已通过' style='margin-top: 20px;color: #6bb66e'>
-            <template #avatar >
-              <CheckCircleOutlined style='margin-left: 50px;color: #6bb66e'/>
-            </template>
-          </a-card-meta>
-          <a-card-meta v-if='picture.reviewStatus === PIC_REVIEW_STATUS_ENUM.REJECT' title='拒绝' style='margin-top: 20px;'>
-            <template #avatar>
-              <CloseCircleOutlined style='margin-left: 50px; color: #f15151'/>
-            </template>
-          </a-card-meta>
-        </a-card>
-      </a-list-item>
-    </template>
-  </a-list>
+  <MyUploadPic v-if ='picOrForum===0' :searchParams='searchParams' :total='total' :pictureList='pictureList' :loading='loading' :onSuccess='onSuccess'/>
+  <MyUploadForum v-else :searchParams='searchParams' :total='total' :forumList='forumList' :loading='loading' :onSuccess='onSuccess' />
 </template>
 
 <script lang='ts' setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import {  onMounted, reactive, ref } from 'vue'
 import {
-  getListPictureByVoUsingPost, getMyListPictureByVoUsingPost, listPictureTagCategoryUsingGet
+   getMyListPictureByVoUsingPost, listPictureTagCategoryUsingGet
 } from '../api/pictureController'
 import { message } from 'ant-design-vue'
-import { useRouter } from 'vue-router'
 import { CheckCircleOutlined ,CloseCircleOutlined,DashOutlined } from '@ant-design/icons-vue'
 import 'vue3-colorpicker/style.css'
 import { useLoginuserStore } from '../stores/loginuserStore'
 import { PIC_REVIEW_STATUS_OPTIONS,PIC_REVIEW_STATUS_ENUM } from '../constants/picture'
 import { getLoginUserUsingGet } from '../api/userController'
+import MyUploadPic from '../components/MyUploadPic.vue'
+import { getMyListForumByVoUsingPost, listForumCategoryUsingGet } from '../api/forumController'
+import MyUploadForum from '../components/MyUploadForum.vue'
+import { saveAs } from 'file-saver'
 
 
 const pictureList = ref<API.PictureVO[]>()
-const router = useRouter()
+const forumList= ref<API.ForumVO[]>()
 const total = ref(0)
-const loading = ref(true)
+const loading = ref(false)
 const categoryTagList = ref<API.PictureTagCategory>()
 
+const picOrForum=ref(0)
 
 const loginUserStore = useLoginuserStore()
 const loginUser = loginUserStore.loginUser
 
 const userId = ref(loginUser.id)
+//获取我的图片
+const getMyPic= async ()=>{
+  picOrForum.value =0
+  if(picOrForum.value===0){
+    loading.value = true
+    if(!userId.value){
+      await fetchUser()
+    }
+    const res = await getMyListPictureByVoUsingPost({
+      userId: userId.value,
+      queryPublic: true,
+      ...searchParams
+    })
+    if (res.code === 0) {
+      pictureList.value = res.data.records ?? []
+      total.value = res.data.total ?? 0
+    } else {
+      message.error('获取数据失败')
+    }
+    loading.value = false
+  }
+}
+
+//获取我的帖子
+const getMyForum= async ()=>{
+  picOrForum.value = 1
+  if(picOrForum.value === 1){
+    loading.value = true
+    if(!userId.value){
+      await fetchUser()
+    }
+    const category =await listForumCategoryUsingGet()
+    if(category.code === 0){
+      categoryTagList.value = category.data
+    }
+    const res = await getMyListForumByVoUsingPost({
+      userId: userId.value,
+      ...searchParams
+    })
+    if (res.code === 0) {
+      forumList.value = res.data.records ?? []
+      total.value = res.data.total ?? 0
+    } else {
+      message.error('获取数据失败')
+    }
+    loading.value = false
+  }
+}
+
+const  onSuccess =() =>{
+  if(picOrForum.value === 0){
+    getMyPic()
+  }else{
+    getMyForum()
+  }
+}
 
 /**
  * 搜索条件
  */
-const searchParams = reactive<API.PictureQueryDto>({
+const searchParams = reactive({
   current: 1,
   pageSize: 12,
   sortField: 'createTime',
   sortOrder: 'descend'
 })
-const paginationParams = computed(() => {
-  return {
-    current: searchParams.current ?? 1,
-    pageSize: searchParams.pageSize ?? 12,
-    total: total.value,
-    showPageSizeChanger: true,
-    showTotal: (total) => `共${total}条`,
-    onChange: (page, pageSize) => {
-      searchParams.current = page
-      searchParams.pageSize = pageSize
-      fetchMyPicture()
-    }
-  }
-})
-
-//获取个人发布在公共图库的图片信息
-const fetchMyPicture = async () => {
-  loading.value = true
-  if(!userId.value){
-    await fetchUser()
-  }
-
-  const res = await getMyListPictureByVoUsingPost({
-    userId: userId.value,
-    queryPublic: true,
-    ...searchParams
-  })
-  if (res.code === 0) {
-    pictureList.value = res.data.records ?? []
-    total.value = res.data.total ?? 0
-  } else {
-    message.error('获取数据失败')
-  }
-  loading.value = false
-}
 
 const fetchCategoryAndTags = async () => {
   const res = await listPictureTagCategoryUsingGet()
@@ -167,26 +170,19 @@ const fetchUser = async () => {
 }
 
 /**
- * 跳转图片详情页
- * @param picture
- */
-const doPictureDetail = (picture) => {
-  router.push({
-    path: `/picture/${picture.id}`
-  })
-}
-
-
-/**
  * 搜索
  */
 const doSearch = async () => {
   searchParams.current = 1
-  fetchMyPicture()
+  if(picOrForum.value === 1){
+    getMyForum()
+  }else{
+    getMyPic()
+  }
 }
 
 onMounted(() => {
-  fetchMyPicture()
+  getMyPic()
   fetchCategoryAndTags()
 })
 
@@ -195,5 +191,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
+.tagsTable{
+  margin-left: 40%;
+  margin-bottom: 10px;
+}
 </style>

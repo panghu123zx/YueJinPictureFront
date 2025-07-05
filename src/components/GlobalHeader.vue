@@ -87,6 +87,11 @@ const originItems = [
     title: '创建图片'
   },
   {
+    key: '/addforum',
+    label: '创建论坛',
+    title: '创建论坛'
+  },
+  {
     key: '/admin/picturemanager',
     label: '图片管理',
     title: '图片管理'
@@ -95,6 +100,11 @@ const originItems = [
     key: '/admin/spacemanager',
     label: '空间管理',
     title: '空间管理'
+  },
+  {
+    key: '/admin/forummanager',
+    label: '论坛管理',
+    title: '论坛管理'
   },
   {
     key: '/likesharepic',
