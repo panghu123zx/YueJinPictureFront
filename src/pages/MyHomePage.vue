@@ -81,7 +81,7 @@ import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import EditUserPwd from '../components/EditUserPwd.vue'
 import EditUserInfo from '../components/EditUserInfo.vue'
-import { deleteCommentUsingPost, getMyCommentHistoryUsingPost } from '../api/commentController'
+import { deleteCommentUsingPost } from '../api/commentController'
 import dayjs from 'dayjs'
 import { LikeFilled,DeleteOutlined } from '@ant-design/icons-vue'
 import CommentMyHistory from '../components/CommentMyHistory.vue'
@@ -120,12 +120,8 @@ const fetchData = async () => {
  * 获取我的评论
  */
 const fetchMyComment=async ()=>{
-  const res=await getMyCommentHistoryUsingPost({})
-  if(res.code===0 && res.data){
-    commentList.value=res.data.records ?? []
-  }else{
-    message.error('获取评论历史失败'+res.data)
-  }
+  //todo  : 获取我的评论 delete
+      commentList.value= []
 }
 
 

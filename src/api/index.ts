@@ -6,6 +6,7 @@ import * as spaceAnalyzeController from './spaceAnalyzeController'
 import * as commentController from './commentController'
 import * as forumController from './forumController'
 import * as mainController from './mainController'
+import * as likeMessageController from './likeMessageController'
 import * as pictureController from './pictureController'
 import * as spaceController from './spaceController'
 import * as spaceUserController from './spaceUserController'
@@ -17,6 +18,7 @@ export default {
   commentController,
   forumController,
   mainController,
+  likeMessageController,
   pictureController,
   spaceController,
   spaceUserController,

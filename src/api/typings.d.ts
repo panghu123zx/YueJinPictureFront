@@ -5,6 +5,7 @@ declare namespace API {
     parentId?: number
     targetId?: number
     targetType?: number
+    targetUserId?: number
   }
 
   type addForumFileUsingPOSTParams = {
@@ -160,6 +161,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponsePageLikeMessageVO_ = {
+    code?: number
+    data?: PageLikeMessageVO_
+    message?: string
+  }
+
   type BaseResponsePagePicture_ = {
     code?: number
     data?: PagePicture_
@@ -257,24 +264,42 @@ declare namespace API {
   }
 
   type CommentQueryDto = {
+    content?: string
     current?: number
+    fromId?: number
+    id?: number
+    isCommentMy?: number
+    isRead?: number
+    likeCount?: number
     pageSize?: number
+    parentId?: number
     sortField?: string
     sortOrder?: string
     targetId?: number
     targetType?: number
+    targetUserId?: number
+    userId?: number
+  }
+
+  type CommentReadDto = {
+    id?: number
+    isRead?: number
   }
 
   type CommentVO = {
     commentVOChildList?: CommentVO[]
     content?: string
     createTime?: string
+    forumVO?: ForumVO
     fromId?: number
     id?: number
+    isRead?: number
     likeCount?: number
     parentId?: number
+    pictureVO?: PictureVO
     targetId?: number
     targetType?: number
+    targetUserId?: number
     updateTime?: string
     userId?: number
     userVO?: UserVO
@@ -472,6 +497,46 @@ declare namespace API {
     likeCount?: number
   }
 
+  type LikeMessageAddDto = {
+    actionType?: number
+    receiverId?: number
+    targetId?: number
+    targetType?: number
+  }
+
+  type LikeMessageQueryDto = {
+    actionType?: number
+    current?: number
+    id?: number
+    isRead?: number
+    pageSize?: number
+    receiverId?: number
+    sendId?: number
+    sortField?: string
+    sortOrder?: string
+    targetId?: number
+    targetType?: number
+  }
+
+  type LikeMessageReadDto = {
+    id?: number
+    isRead?: number
+  }
+
+  type LikeMessageVO = {
+    actionType?: number
+    createTime?: string
+    forumVO?: ForumVO
+    id?: number
+    isRead?: number
+    pictureVO?: PictureVO
+    receiverId?: number
+    sendId?: number
+    targetId?: number
+    targetType?: number
+    userVO?: UserVO
+  }
+
   type LoginUserVo = {
     createTime?: string
     editTime?: string
@@ -524,6 +589,14 @@ declare namespace API {
     total?: number
   }
 
+  type PageLikeMessageVO_ = {
+    current?: number
+    pages?: number
+    records?: LikeMessageVO[]
+    size?: number
+    total?: number
+  }
+
   type PagePicture_ = {
     current?: number
     pages?: number
@@ -538,13 +611,6 @@ declare namespace API {
     records?: PictureVO[]
     size?: number
     total?: number
-  }
-
-  type PageRequest = {
-    current?: number
-    pageSize?: number
-    sortField?: string
-    sortOrder?: string
   }
 
   type PageSpace_ = {

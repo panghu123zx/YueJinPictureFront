@@ -77,6 +77,11 @@ const originItems = [
     title: '论坛'
   },
   {
+    key: '/message',
+    label: '消息',
+    title: '消息'
+  },
+  {
     key: '/admin/usermanager',
     label: '用户管理',
     title: '用户管理'

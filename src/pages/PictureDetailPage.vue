@@ -88,6 +88,8 @@ import { useRouter } from 'vue-router'
 import Modal from '../components/ShareModal.vue'
 import { SPACE_PERMISSION_ENUM } from '../constants/spaceuser'
 import CommentDrawer from '../components/CommentDrawer.vue'
+import { addUserShareUsingPost } from '../api/userLikeController'
+import { addLikeMessageUsingPost } from '../api/likeMessageController'
 
 //获取动态参数
 const props = defineProps<{
@@ -158,11 +160,24 @@ const doDownload = () => {
 const modalRef=ref()
 const link= ref('')
 
-const doShare = () => {
+const doShare = async () => {
   link.value= `${window.location.protocol}//${window.location.host}/picture/${picture.value.id}`
   if(modalRef.value){
     modalRef.value.openModal()
   }
+
+  await addUserShareUsingPost({
+    targetId: picture.value.id,
+    targetType: 0,
+    likeShare: 1
+  })
+  //发送消息
+  await  addLikeMessageUsingPost({
+    receiverId: picture.value.userId,
+    targetType: 0,
+    targetId: picture.value.id,
+    actionType: 1
+  })
 }
 
 const commentRef=ref()

@@ -32,12 +32,12 @@ export async function deleteCommentUsingPost(
   })
 }
 
-/** getCommentHistoryMy POST /api/comment/get/historyMy */
+/** getCommentHistoryMy POST /api/comment/get/history */
 export async function getCommentHistoryMyUsingPost(
-  body: API.PageRequest,
+  body: API.CommentQueryDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePageCommentVO_>('/api/comment/get/historyMy', {
+  return request<API.BaseResponsePageCommentVO_>('/api/comment/get/history', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -62,12 +62,12 @@ export async function getTargetCommentUsingPost(
   })
 }
 
-/** getMyCommentHistory POST /api/comment/getMy/history */
-export async function getMyCommentHistoryUsingPost(
-  body: API.PageRequest,
+/** likeComment POST /api/comment/like/comment */
+export async function likeCommentUsingPost(
+  body: API.LikeCommentDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePageCommentVO_>('/api/comment/getMy/history', {
+  return request<API.BaseResponseBoolean_>('/api/comment/like/comment', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -77,12 +77,12 @@ export async function getMyCommentHistoryUsingPost(
   })
 }
 
-/** likeComment POST /api/comment/like/comment */
-export async function likeCommentUsingPost(
-  body: API.LikeCommentDto,
+/** readComment POST /api/comment/read */
+export async function readCommentUsingPost(
+  body: API.CommentReadDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseBoolean_>('/api/comment/like/comment', {
+  return request<API.BaseResponseBoolean_>('/api/comment/read', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

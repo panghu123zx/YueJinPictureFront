@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../pages/HomeView.vue'
+import MessagePage from '../pages/MessagePage.vue'
 import ForumPage from '../pages/ForumPage.vue'
 import MySpacePage from '../pages/MySpacePage.vue'
 import AddPicture from '../pages/AddPicture.vue'
@@ -29,6 +30,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/message',
+      name: 'message',
+      component: MessagePage
     },
     {
       path: '/space',

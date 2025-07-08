@@ -7,7 +7,7 @@ export async function addUserLikeUsingPost(
   body: API.UserLikeAddDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseBoolean_>('/api/userlike/addUserLike', {
+  return request<API.BaseResponseLong_>('/api/userlike/addUserLike', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export async function unUserLikeUsingPost(
   body: API.UserLikeAddDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseBoolean_>('/api/userlike/unUserLike', {
+  return request<API.BaseResponseLong_>('/api/userlike/unUserLike', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

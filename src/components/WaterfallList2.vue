@@ -79,13 +79,13 @@
               </div>
             </transition-group>
             <!-- 常驻图片名称 -->
-            <div class='image-name' >{{ item.name || '1' }}</div>
+            <div class='image-name'>{{ item.name || '1' }}</div>
           </div>
         </template>
       </Waterfall>
     </div>
     <Modal ref='modalRef' :link='link' :url='url' />
-    <CommentDrawer ref='commentRef' :id='pictureId' />
+    <CommentDrawer ref='commentRef' :id='pictureId' :targetType='0' :targetUserId='targetUserId'/>
   </div>
 
 </template>
@@ -112,6 +112,7 @@ import {
 import { message } from 'ant-design-vue'
 import Modal from '../components/ShareModal.vue'
 import CommentDrawer from './CommentDrawer.vue'
+import { addLikeMessageUsingPost } from '../api/likeMessageController'
 
 //  hover 状态管理（避免多个卡片互相干扰）
 const hoverStates = ref({})
@@ -233,10 +234,19 @@ const doSharePicture = async (item) => {
   if (modalRef.value) {
     modalRef.value.openModal()
   }
-  const res = await addUserShareUsingPost({
+  //记录分享
+  await addUserShareUsingPost({
     targetId: item.id,
     targetType: 0,
     likeShare: 1
+  })
+
+  //发送消息
+  await addLikeMessageUsingPost({
+    receiverId: item.userId,
+    targetType: 0,
+    targetId: item.id,
+    actionType: 1
   })
 }
 
@@ -254,7 +264,14 @@ const addlike = async (item) => {
   } else {
     message.error('点赞失败')
   }
-  fetchMyLike()
+  //发送消息
+  await addLikeMessageUsingPost({
+    receiverId: item.userId,
+    targetType: 0,
+    targetId: item.id,
+    actionType: 0
+  })
+  isLike.value.push(item.id)
 }
 
 /**
@@ -268,20 +285,22 @@ const unlike = async (item) => {
   })
   if (res.code !== 0) {
     message.error('取消点赞失败')
-    return;
+    return
   }
   item.likeCount--
   const index = isLike.value.indexOf(item.id)
-  if(index > -1){
-    isLike.value.splice(index,1)
+  if (index > -1) {
+    isLike.value.splice(index, 1)
   }
   fetchMyLike()
 }
 
 const commentRef = ref()
 const pictureId = ref()
+const targetUserId=ref()
 const toComment = (item) => {
   pictureId.value = item.id
+  targetUserId.value=item.userId
   if (commentRef.value) {
     commentRef.value.showDrawer()
   }

@@ -93,12 +93,14 @@ import {
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { LikeFilled, LikeOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { getLoginUserUsingGet } from '../api/userController'
 
 
 
 interface Props {
   id: number | string,
-  targetType: number
+  targetType: number,
+  targetUserId: number | string
 }
 
 const props = defineProps<Props>()
@@ -116,6 +118,8 @@ const likeComment = ref([])
 //添加评论时的参数值
 const params = ref<API.AddCommentDto>()
 
+const loginUser=ref<API.UserVO>()
+
 /**
  * 回复评论
  */
@@ -124,7 +128,8 @@ const replyComment = async (item) => {
   isShow.value = true
   params.value = {
     fromId: item.userId,
-    parentId: item.id
+    parentId: item.id,
+    targetUserId: props.targetUserId
   }
 }
 
@@ -199,6 +204,9 @@ const doAddComment = async () => {
     message.error('评论内容不能为空')
     return
   }
+  if(!loginUser.value?.id){
+    await fetchUser();
+  }
 
 
   params.value.targetId = props.id as number
@@ -219,6 +227,12 @@ const doAddComment = async () => {
   fetchCommentData()
 }
 
+const fetchUser=async ()=>{
+  const res=await getLoginUserUsingGet()
+  if(res.code===0 && res.data){
+    loginUser.value=res.data
+  }
+}
 
 watch(() => props.id
   , (newPictureId) => {
