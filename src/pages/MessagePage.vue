@@ -344,7 +344,6 @@ onMounted(() => {
 })
 </script>
 
-
 <style scoped>
 #message-page {
   width: 90%;

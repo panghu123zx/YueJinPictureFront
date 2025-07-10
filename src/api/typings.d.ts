@@ -8,6 +8,12 @@ declare namespace API {
     targetUserId?: number
   }
 
+  type AddFollowDto = {
+    followerId?: number
+    status?: number
+    userId?: number
+  }
+
   type addForumFileUsingPOSTParams = {
     fileUrl?: string
     forumId?: number
@@ -26,6 +32,12 @@ declare namespace API {
   type BaseResponseCreateOutPaintingTaskVo_ = {
     code?: number
     data?: CreateOutPaintingTaskVo
+    message?: string
+  }
+
+  type BaseResponseFollow_ = {
+    code?: number
+    data?: Follow
     message?: string
   }
 
@@ -146,6 +158,12 @@ declare namespace API {
   type BaseResponsePageCommentVO_ = {
     code?: number
     data?: PageCommentVO_
+    message?: string
+  }
+
+  type BaseResponsePageFollowVO_ = {
+    code?: number
+    data?: PageFollowVO_
     message?: string
   }
 
@@ -324,6 +342,40 @@ declare namespace API {
   type downloadFileUsingGETParams = {
     /** filePath */
     filePath?: string
+  }
+
+  type Follow = {
+    createTime?: string
+    followState?: number
+    followerId?: number
+    id?: number
+    isDeleted?: number
+    isMutual?: number
+    userId?: number
+  }
+
+  type FollowQueryDto = {
+    current?: number
+    followState?: number
+    followerId?: number
+    id?: number
+    isMutual?: number
+    pageSize?: number
+    queryStatus?: number
+    sortField?: string
+    sortOrder?: string
+    userId?: number
+  }
+
+  type FollowVO = {
+    createTime?: string
+    followState?: number
+    followerId?: number
+    followerVO?: UserVO
+    id?: number
+    isMutual?: number
+    userId?: number
+    userVO?: UserVO
   }
 
   type Forum = {
@@ -569,6 +621,14 @@ declare namespace API {
     current?: number
     pages?: number
     records?: CommentVO[]
+    size?: number
+    total?: number
+  }
+
+  type PageFollowVO_ = {
+    current?: number
+    pages?: number
+    records?: FollowVO[]
     size?: number
     total?: number
   }

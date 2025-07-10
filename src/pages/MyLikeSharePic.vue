@@ -5,22 +5,30 @@
     <a-button @click='getMyShare' style='width: 100px;height: 40px;background-color: #e9bb76;color: #704c4c'>我的分享</a-button>
   </a-space>
 
-  <a-list
-    :grid='{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }'
-    :data-source='pictureList'
-    :pagination='pagination'
-    :loading='loading'
-  >
-    <template #renderItem='{item :picture}'>
-      <a-list-item style='padding: 10px'>
-        <a-card hoverable style='width: 240px;' @click='doPictureDetail(picture)'>
-          <template #cover>
-            <img :alt='picture.name' :src='picture.thumbnailUrl ?? picture.url' style='height: 180px;object-fit: cover' loading='lazy' />
-          </template>
-        </a-card>
-      </a-list-item>
-    </template>
-  </a-list>
+  <a-card title='图片列表'>
+    <a-list
+      :grid='{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }'
+      :data-source='pictureList'
+      :pagination='pagination'
+      :loading='loading'
+    >
+      <template #renderItem='{item :picture}'>
+        <a-list-item style='padding: 10px'>
+          <a-card hoverable style='width: 240px;' @click='doPictureDetail(picture)'>
+            <template #cover>
+              <img :alt='picture.name' :src='picture.thumbnailUrl ?? picture.url' style='height: 180px;object-fit: cover' loading='lazy' />
+            </template>
+            <a-card-meta :title="picture.user?.userName" :description="picture.name">
+              <template #avatar>
+                <a-avatar :src="picture.user?.userAvatar" />
+              </template>
+            </a-card-meta>
+          </a-card>
+        </a-list-item>
+      </template>
+    </a-list>
+  </a-card>
+
 </template>
 
 <script lang='ts' setup>
