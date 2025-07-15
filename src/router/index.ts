@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../pages/HomeView.vue'
+import ChatPage from '../pages/ChatPage.vue'
 import MessagePage from '../pages/MessagePage.vue'
 import ForumPage from '../pages/ForumPage.vue'
 import MySpacePage from '../pages/MySpacePage.vue'
@@ -30,6 +31,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: ChatPage
     },
     {
       path: '/message',

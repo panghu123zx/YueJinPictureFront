@@ -42,7 +42,7 @@
     </a-row>
   </div>
   <Modal ref='modalRef' :link='link' :url='forum?.forumFile[0]?.picUrl'/>
-  <CommentDrawer ref='commentRef' :id='forum?.id' :targetType='1' :targetUserId='forum.userId'/>
+  <CommentDrawer ref='commentRef' :id='forum?.id' :targetType='1' :targetUserId='forum?.userId'/>
 </template>
 
 <script lang='ts' setup>

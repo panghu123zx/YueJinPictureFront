@@ -10,8 +10,10 @@ declare namespace API {
 
   type AddFollowDto = {
     followerId?: number
+    followerIdName?: string
     status?: number
     userId?: number
+    userIdName?: string
   }
 
   type addForumFileUsingPOSTParams = {
@@ -155,6 +157,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponsePageChatPromptVO_ = {
+    code?: number
+    data?: PageChatPromptVO_
+    message?: string
+  }
+
   type BaseResponsePageCommentVO_ = {
     code?: number
     data?: PageCommentVO_
@@ -279,6 +287,62 @@ declare namespace API {
     code?: number
     data?: UserVO
     message?: string
+  }
+
+  type ChatPromptAddDto = {
+    chatType?: number
+    lastMessage?: string
+    lastMessageTime?: string
+    receiveTitle?: string
+    targetId?: number
+    title?: string
+    unreadCount?: number
+    userId?: number
+  }
+
+  type ChatPromptQueryDto = {
+    chatType?: number
+    current?: number
+    id?: number
+    isQuery?: number
+    lastMessage?: string
+    lastMessageTime?: string
+    pageSize?: number
+    receiveTitle?: string
+    sortField?: string
+    sortOrder?: string
+    targetId?: number
+    title?: string
+    unreadCount?: number
+    userId?: number
+  }
+
+  type ChatPromptUpdateDto = {
+    chatType?: number
+    id?: number
+    lastMessage?: string
+    lastMessageTime?: string
+    receiveTitle?: string
+    targetId?: number
+    title?: string
+    unreadCount?: number
+    userId?: number
+  }
+
+  type ChatPromptVO = {
+    chatType?: number
+    createTime?: string
+    id?: number
+    isReceive?: number
+    lastMessage?: string
+    lastMessageTime?: string
+    receiveTitle?: string
+    targetId?: number
+    targetUserVO?: UserVO
+    title?: string
+    unreadCount?: number
+    updateTime?: string
+    userId?: number
   }
 
   type CommentQueryDto = {
@@ -615,6 +679,14 @@ declare namespace API {
     taskId?: string
     taskMetrics?: TaskMetrics
     taskStatus?: string
+  }
+
+  type PageChatPromptVO_ = {
+    current?: number
+    pages?: number
+    records?: ChatPromptVO[]
+    size?: number
+    total?: number
   }
 
   type PageCommentVO_ = {

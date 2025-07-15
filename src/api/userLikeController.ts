@@ -37,7 +37,7 @@ export async function getLikePostUsingPost(
   body: API.UserLikeQueryDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePageForum_>('/api/userlike/get/likeforum', {
+  return request<API.BaseResponsePageForumVO_>('/api/userlike/get/likeforum', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export async function getLikePicUsingPost(
   body: API.UserLikeQueryDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePagePicture_>('/api/userlike/get/likepic', {
+  return request<API.BaseResponsePagePictureVO_>('/api/userlike/get/likepic', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

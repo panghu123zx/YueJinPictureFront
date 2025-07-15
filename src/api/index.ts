@@ -3,6 +3,7 @@
 // API 更新时间：
 // API 唯一标识：
 import * as spaceAnalyzeController from './spaceAnalyzeController'
+import * as chatPromptController from './chatPromptController'
 import * as commentController from './commentController'
 import * as followController from './followController'
 import * as forumController from './forumController'
@@ -16,6 +17,7 @@ import * as userController from './userController'
 import * as userLikeController from './userLikeController'
 export default {
   spaceAnalyzeController,
+  chatPromptController,
   commentController,
   followController,
   forumController,

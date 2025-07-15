@@ -82,6 +82,11 @@ const originItems = [
     title: '消息'
   },
   {
+    key: '/chat',
+    label: '聊天',
+    title: '聊天'
+  },
+  {
     key: '/admin/usermanager',
     label: '用户管理',
     title: '用户管理'

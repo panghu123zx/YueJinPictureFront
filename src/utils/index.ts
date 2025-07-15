@@ -35,3 +35,10 @@ export function toHexColor(input) {
   // 返回标准 #RRGGBB 格式
   return `#${hexColor}`
 }
+
+export function formatView(viewCount? : number) {
+  if(!viewCount) return '未知'
+  if(viewCount < 1000) return viewCount
+  if(viewCount < 10000) return (viewCount / 1000).toFixed(1) + 'k'
+  return (viewCount / 10000).toFixed(1) + 'w'
+}

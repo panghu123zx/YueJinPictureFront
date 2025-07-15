@@ -22,7 +22,7 @@
               <!-- 常驻浏览量 -->
               <div class='views'>
                 <EyeOutlined />
-                {{ item.viewCount }}
+                {{ formatView(item.viewCount) }}
               </div>
 
               <!-- 悬浮显示的作者信息（左下角） -->
@@ -113,6 +113,7 @@ import { message } from 'ant-design-vue'
 import Modal from '../components/ShareModal.vue'
 import CommentDrawer from './CommentDrawer.vue'
 import { addLikeMessageUsingPost } from '../api/likeMessageController'
+import {formatView} from '../utils/index'
 
 //  hover 状态管理（避免多个卡片互相干扰）
 const hoverStates = ref({})

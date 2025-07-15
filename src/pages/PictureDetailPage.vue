@@ -233,7 +233,9 @@ const doFollow = async (statu) => {
   }
   const res = await addFollowUsingPost({
     userId: picture.value?.userId,
+    followerIdName:loginUser.userName,
     followerId: loginUser.id,
+    userIdName: picture.value.user?.userName,
     status: statu
   })
   if (res.code !== 0) {
