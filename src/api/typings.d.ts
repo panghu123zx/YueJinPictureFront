@@ -1,4 +1,10 @@
 declare namespace API {
+  type addAudioFileUsingPOSTParams = {
+    fileType?: number
+    introduction?: string
+    title?: string
+  }
+
   type AddCommentDto = {
     content?: string
     fromId?: number
@@ -23,6 +29,39 @@ declare namespace API {
     position?: number
     sort?: number
     type?: number
+  }
+
+  type AudioFileQueryDto = {
+    current?: number
+    fileType?: number
+    id?: number
+    introduction?: string
+    pageSize?: number
+    size?: number
+    sortField?: string
+    sortOrder?: string
+    title?: string
+    userId?: number
+  }
+
+  type AudioFileUpdateDto = {
+    id?: number
+    introduction?: string
+    title?: string
+  }
+
+  type AudioFileVO = {
+    createTime?: string
+    fileType?: number
+    fileUrl?: string
+    id?: number
+    introduction?: string
+    md5?: string
+    size?: number
+    title?: string
+    updateTime?: string
+    userId?: number
+    userVO?: UserVO
   }
 
   type BaseResponseBoolean_ = {
@@ -154,6 +193,12 @@ declare namespace API {
   type BaseResponseLong_ = {
     code?: number
     data?: number
+    message?: string
+  }
+
+  type BaseResponsePageAudioFileVO_ = {
+    code?: number
+    data?: PageAudioFileVO_
     message?: string
   }
 
@@ -679,6 +724,14 @@ declare namespace API {
     taskId?: string
     taskMetrics?: TaskMetrics
     taskStatus?: string
+  }
+
+  type PageAudioFileVO_ = {
+    current?: number
+    pages?: number
+    records?: AudioFileVO[]
+    size?: number
+    total?: number
   }
 
   type PageChatPromptVO_ = {
