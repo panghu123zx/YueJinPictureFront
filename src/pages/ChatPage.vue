@@ -48,51 +48,84 @@
           </template>
           <div class='card-body'>
             <div class='chat-scroll'>
-              <a-list item-layout='horizontal' :data-source='historyMessage?.historyMessage.records'>
-                <template #renderItem='{ item }'>
-                  <a-list-item v-if='item?.sendId===loginUserStore.loginUser.id'>
-                    <a-list-item-meta
-                      style='display: flex;flex-direction: row-reverse;'
-                    >
-                      <template #avatar>
-                        <a-avatar :src='loginUserStore.loginUser.userAvatar' :size='64' shape='square' />
-                      </template>
-                      <template #description>
-                        <div class='receive'>
-                          <div v-if='item.messageType===0'>
-                            <a-image :src='item?.url' style='max-height: 220px' />
-                          </div>
-                          <div v-else-if='item.messageType===1'>
-                            <video :src='item?.url' controls playsinline
-                                   style='max-height: 220px;width: auto; display: block' />
-                          </div>
-                          <div v-else-if='item.messageType===2'>
-                            <audio  :src='item?.url' controls/>
-                          </div>
-                          <div v-else>{{ item?.content }}</div>
-                        </div>
-                      </template>
-                    </a-list-item-meta>
-                  </a-list-item>
-
-                  <a-list-item v-else>
-                    <a-list-item-meta>
-                      <template #avatar>
-                        <a-avatar :src='chatMessage?.targetUserVO.userAvatar' :size='64' shape='square' />
-                      </template>
-                      <template #description>
-                        <div class='positive' v-if='!item?.url'>{{ item?.content }}</div>
-                        <div class='positive' v-else>
-                          <a-image v-if='picOrFile===0' :src='item?.url' style='max-height: 220px' />
-                          <video v-else :src='item?.url' height='220px' controls />
-                        </div>
-                      </template>
-                    </a-list-item-meta>
-                  </a-list-item>
-                </template>
-              </a-list>
+                <a-list item-layout='horizontal' :data-source='historyMessage'>
+                  <template #renderItem='{ item }'>
+<!--                    <div v-if='time(item)' style='text-align: center;'>-->
+<!--                      {{ dayjs(item.createTime).format('YYYY-MM-DD HH:mm') }}-->
+<!--                    </div>-->
+                    <a-list-item v-if='item?.sendId===loginUserStore.loginUser.id'>
+                      <a-list-item-meta
+                        style='display: flex;flex-direction: row-reverse;'
+                      >
+                        <template #avatar>
+                          <a-avatar :src='loginUserStore.loginUser.userAvatar' :size='64' shape='square' />
+                        </template>
+                        <template #description>
+                          <a-collapse class='receive'>
+                            <a-collapse-panel :show-arrow='false' style='border: none'>
+                              <template #header>
+                                <a-image v-if='item.messageType===0' :src='item?.url' style='max-height: 220px' />
+                                <video v-else-if='item.messageType===1' :src='item?.url' controls playsinline
+                                       style='max-height: 220px;width: auto; display: block' />
+                                <audio v-else-if='item.messageType===3' :src='item?.url' controls />
+                                <div v-else>
+                                  <div>{{ item?.content }}</div>
+                                  <div v-if='item.replayId!=null'
+                                       style='background-color: #ededed;border-radius: 10px;text-align: center;'>
+                                    {{ item.replayContent }}
+                                  </div>
+                                </div>
+                              </template>
+                              <a-space>
+                                <CommentOutlined @click='replayClick(item)' />
+                                <CopyOutlined @click='clikeCopy(item)' />
+                                <ArrowLeftOutlined @click='unMessage(item)' />
+                                <SearchOutlined />
+                              </a-space>
+                            </a-collapse-panel>
+                          </a-collapse>
+                        </template>
+                      </a-list-item-meta>
+                    </a-list-item>
+                    <a-list-item v-else>
+                      <a-list-item-meta>
+                        <template #avatar>
+                          <a-avatar :src='chatMessage?.targetUserVO.userAvatar' :size='64' shape='square' />
+                        </template>
+                        <template #description>
+                          <a-collapse class='positive'>
+                            <a-collapse-panel :show-arrow='false' style='border: none'>
+                              <template #header>
+                                <a-image v-if='item.messageType===0' :src='item?.url' style='max-height: 220px' />
+                                <video v-else-if='item.messageType===1' :src='item?.url' controls playsinline
+                                       style='max-height: 220px;width: auto; display: block' />
+                                <audio v-else-if='item.messageType===3' :src='item?.url' controls />
+                                <div v-else>
+                                  <div>{{ item?.content }}</div>
+                                  <div v-if='item.replayId!=null'
+                                       style='background-color: #ededed;border-radius: 10px;text-align: center;'>
+                                    {{ item.replayContent }}
+                                  </div>
+                                </div>
+                              </template>
+                              <a-space>
+                                <CommentOutlined @click='replayClick(item)' />
+                                <CopyOutlined @click='clikeCopy(item)' />
+                                <SearchOutlined />
+                              </a-space>
+                            </a-collapse-panel>
+                          </a-collapse>
+                        </template>
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </template>
+                </a-list>
             </div>
             <div class='SendMessage'>
+              <a-flex v-if='replay===1' class='replay' justify='space-between'>
+                回复了：{{ replayContent }}
+                <a-button @click='unReplay' style='border: none;background-color: #edd4d4;color: white;'>取消回复</a-button>
+              </a-flex>
               <a-input-group compact>
                 <a-input v-model:value='content' placeholder='请输入内容...'
                          style='width: calc(100% - 200px);margin-left: 30px;'>
@@ -128,7 +161,7 @@
 //初始化 WebSocket 连接，绑定事件
 import ChatWebSocket from '../utils/ChatWebSocket'
 import { message, UploadProps } from 'ant-design-vue'
-import { defineProps, onMounted, onUnmounted, ref, watchEffect, withDefaults } from 'vue'
+import { computed, defineProps, onMounted, onUnmounted, ref, watchEffect, withDefaults } from 'vue'
 import { CHAT_MESSAGE_TYPE_ENUM } from '../constants/chat'
 import { useLoginuserStore } from '../stores/loginuserStore'
 import { getListChatPromptVoUsingPost } from '../api/chatPromptController'
@@ -139,9 +172,15 @@ import {
   UserOutlined,
   SendOutlined,
   PictureOutlined,
-  FileOutlined
+  FileOutlined,
+  CommentOutlined,
+  CopyOutlined,
+  SearchOutlined,
+  ArrowLeftOutlined
 } from '@ant-design/icons-vue'
 import { addAudioFileUsingPost } from '../api/audioFileController'
+import { backMessageUsingPost } from '../api/chatMessageController'
+import dayjs from 'dayjs'
 
 const loginUserStore = useLoginuserStore()
 const chatKey = ref('null')
@@ -160,6 +199,9 @@ const historyMessage = ref()
 const oneLineUser = ref()
 //0-图片，1-文件，2-音频
 const picOrFile = ref<number>(0)
+const replay = ref(0)
+const replayContent = ref('')
+const replayId = ref()
 
 const updateType = (num) => {
   picOrFile.value = num
@@ -183,7 +225,7 @@ const doChange = async (key) => {
   })
   if (res.code === 0 && res.data) {
     listChat.value = res.data.records ?? []
-    total.value = res.data.total ?? 0
+    total.value = res.data.total as number ?? 0
   } else {
     message.error(res.data)
   }
@@ -192,6 +234,15 @@ const doChange = async (key) => {
 const uploadItemClick = (item) => {
   chatMessage.value = item
 }
+//todo 时间的展示
+const time=(item)=>{
+  historyMessage?.value.forEach((data)=>{
+    if(item.id===data.id){
+
+    }
+  })
+}
+
 //上传文件
 const handleUpload = async ({ file }: any) => {
   try {
@@ -209,7 +260,7 @@ const handleUpload = async ({ file }: any) => {
         })
       }
     } else {
-      message.error('上传失败:{}',res.data)
+      message.error('上传失败:{}', res.data)
     }
   } catch (e) {
     message.error('上传失败:{}', e.message)
@@ -245,7 +296,7 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
     const isAllowedAudio = [
       'audio/mpeg',   // MP3
       'audio/wav',    // WAV
-      'audio/ogg',    // OGG
+      'audio/ogg'    // OGG
     ].includes(file.type)
 
     //不是视频格式，判断是否为音频
@@ -271,95 +322,136 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
     }
   }
 }
+//复制
+const clikeCopy = (item) => {
+  navigator.clipboard.writeText(item?.content ?? item?.url)
+  message.success('复制成功')
+}
 
-//子组件成功的回调
-  const onSuccess = (chatKey) => {
-    doChange(chatKey)
-  }
-//todo 修改反向的title receiveTitle
-  const onSearch = () => {
-    searchParams.value.title = name.value
-    doChange('null')
-  }
+//回复
+const replayClick = (item) => {
+  replay.value = 1
+  replayContent.value = item?.content
+  replayId.value = item.id
+}
+//取消回复
+const unReplay = () => {
+  replay.value = 0
+  replayId.value = ''
+}
 
-  onMounted(() => {
-    doChange('null')
+//撤回消息
+const unMessage = async (item) => {
+  const res = await backMessageUsingPost({
+    id: item.id
   })
-//发送消息
-  const sendMessage = () => {
+  if (res.code === 0 && res.data) {
+    //撤回消息之后重新获取消息
     if (websocket) {
       websocket.sendMessage({
-        type: CHAT_MESSAGE_TYPE_ENUM.SEND,
-        content: content.value,
-        receiverId: chatMessage.value?.targetUserVO.id
+        type: CHAT_MESSAGE_TYPE_ENUM.HISTORY
       })
     }
-    content.value = ''
+  } else {
+    message.error(res.msg)
   }
+}
+
+//子组件成功的回调
+const onSuccess = (chatKey) => {
+  doChange(chatKey)
+}
+//todo 修改反向的title receiveTitle
+const onSearch = () => {
+  searchParams.value.title = name.value
+  doChange('null')
+}
+
+onMounted(() => {
+  doChange('null')
+})
+//发送消息
+const sendMessage = () => {
+  const params = {
+    type: CHAT_MESSAGE_TYPE_ENUM.SEND,
+    content: content.value,
+    receiverId: chatMessage.value?.targetUserVO.id
+  }
+  if (replayId.value !== '') {
+    params.replayId = replayId.value
+  }
+  if (websocket) {
+    websocket.sendMessage({
+      ...params
+    })
+  }
+  content.value = ''
+  replayId.value = ''
+  replay.value = 0
+}
 
 //监听是否创建websocket连接
-  watchEffect(() => {
-    if (chatMessage.value?.id) {
-      initWebSocket()
-    }
-    chatMessage.value
-    // historyMessage.value
-  })
-//断开websocket连接
-  onUnmounted(() => {
-    if (websocket) {
-      websocket.disconnect()
-    }
-  })
-
-  const initWebSocket = () => {
-    if (!chatMessage.value?.id) {
-      return
-    }
-    //防止websocket未被释放
-    if (websocket) {
-      websocket.disconnect()
-    }
-    //创建webSocket实例
-    websocket = new ChatWebSocket(chatMessage.value.id)
-    //建立 webSocket 连接
-    websocket.connect()
-    //监听消息
-    websocket.on(CHAT_MESSAGE_TYPE_ENUM.JOIN, (msg: any) => {
-      console.log('收到消息:', msg)
-    })
-
-    //监听错误
-    websocket.on(CHAT_MESSAGE_TYPE_ENUM.ERROR, (msg: any) => {
-      console.error('收到错误消息123:', msg)
-    })
-
-    //监听收到历史消息状态
-    websocket.on(CHAT_MESSAGE_TYPE_ENUM.HISTORY, (msg: any) => {
-      console.log('收到历史消息123:', msg)
-      historyMessage.value = msg
-      console.log('historyMessage', historyMessage.value)
-    })
-
-    //监听在线用户
-    websocket.on(CHAT_MESSAGE_TYPE_ENUM.ONLINEUSER, (msg: any) => {
-      console.log('获取在线用户123', msg)
-      oneLineUser.value = msg
-      console.log('oneLineUser：', oneLineUser.value)
-    })
-
-    //监听退出编辑状态
-    websocket.on(CHAT_MESSAGE_TYPE_ENUM.EXIT, (msg: any) => {
-      console.log('收到退出123')
-    })
-
-    //监听发送消息
-    websocket.on(CHAT_MESSAGE_TYPE_ENUM.SEND, (msg: any) => {
-      console.log('收到发送之后的消息后的历史数据:', msg)
-      historyMessage.value = msg
-      message.info(msg.message)
-    })
+watchEffect(() => {
+  if (chatMessage.value?.id) {
+    initWebSocket()
   }
+  chatMessage.value
+  // historyMessage.value
+})
+//断开websocket连接
+onUnmounted(() => {
+  if (websocket) {
+    websocket.disconnect()
+  }
+})
+
+const initWebSocket = () => {
+  if (!chatMessage.value?.id) {
+    return
+  }
+  //防止websocket未被释放
+  if (websocket) {
+    websocket.disconnect()
+  }
+  //创建webSocket实例
+  websocket = new ChatWebSocket(chatMessage.value.id)
+  //建立 webSocket 连接
+  websocket.connect()
+  //监听消息
+  websocket.on(CHAT_MESSAGE_TYPE_ENUM.JOIN, (msg: any) => {
+    console.log('收到消息:', msg)
+  })
+
+  //监听错误
+  websocket.on(CHAT_MESSAGE_TYPE_ENUM.ERROR, (msg: any) => {
+    console.error('收到错误消息123:', msg)
+  })
+
+  //监听收到历史消息状态
+  websocket.on(CHAT_MESSAGE_TYPE_ENUM.HISTORY, (msg: any) => {
+    historyMessage.value = msg
+    historyMessage.value = historyMessage.value.historyMessage.records.reverse()
+    console.log('historyMessage', historyMessage.value)
+  })
+
+  //监听在线用户
+  websocket.on(CHAT_MESSAGE_TYPE_ENUM.ONLINEUSER, (msg: any) => {
+    oneLineUser.value = msg
+    console.log('oneLineUser：', oneLineUser.value)
+  })
+
+  //监听退出编辑状态
+  websocket.on(CHAT_MESSAGE_TYPE_ENUM.EXIT, (msg: any) => {
+    console.log('收到退出123')
+  })
+
+  //监听发送消息
+  websocket.on(CHAT_MESSAGE_TYPE_ENUM.SEND, (msg: any) => {
+    console.log('收到发送之后的消息后的历史数据:', msg)
+    historyMessage.value = msg
+    historyMessage.value = historyMessage.value.historyMessage.records.reverse()
+  })
+}
 
 
 </script>
@@ -420,5 +512,31 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
   flex-direction: column;
   overflow: auto;
   height: 650px;
+}
+
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-collapse .ant-collapse-content>.ant-collapse-content-box) {
+  height: 38px;
+  padding-top: 10px;
+  border: 1px solid #fff7f7;
+  border-radius: 20px;
+  background-color: #eee;
+}
+
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-collapse .ant-collapse-item:last-child >.ant-collapse-content) {
+  background-color: #f9f7f7;
+  border: none;
+}
+
+.replay {
+  margin-left: 30px;
+  margin-bottom: 10px;
+  background-color: #edd4d4;
+  max-width: 100%;
+  margin-right: 128px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding-left: 10px;
+  color: white;
+  align-items: center;
 }
 </style>

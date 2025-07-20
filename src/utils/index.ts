@@ -3,6 +3,7 @@
  * @param size
  */
 import { saveAs } from 'file-saver'
+import dayjs from 'dayjs'
 
 export const formatSize = (size?: number) => {
   if (!size) return '未知'
@@ -42,3 +43,4 @@ export function formatView(viewCount? : number) {
   if(viewCount < 10000) return (viewCount / 1000).toFixed(1) + 'k'
   return (viewCount / 10000).toFixed(1) + 'w'
 }
+

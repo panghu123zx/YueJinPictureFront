@@ -4,6 +4,7 @@
 // API 唯一标识：
 import * as spaceAnalyzeController from './spaceAnalyzeController'
 import * as audioFileController from './audioFileController'
+import * as chatMessageController from './chatMessageController'
 import * as chatPromptController from './chatPromptController'
 import * as commentController from './commentController'
 import * as followController from './followController'
@@ -19,6 +20,7 @@ import * as userLikeController from './userLikeController'
 export default {
   spaceAnalyzeController,
   audioFileController,
+  chatMessageController,
   chatPromptController,
   commentController,
   followController,
