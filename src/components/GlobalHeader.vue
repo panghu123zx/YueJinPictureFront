@@ -15,18 +15,21 @@
       <a-col flex='170px'>
         <a-dropdown>
           <div class='login-status'>
-            <div v-if='useLoginuser.loginUser.id'>
+            <div v-if='useLoginuser.loginUser?.id'>
               <a-space >
                 <a-avatar :src='useLoginuser.loginUser.userAvatar ' />
                 {{ useLoginuser.loginUser.userName ?? '无名1' }}
               </a-space>
             </div>
             <div v-else>
-              <a-button type='primary' href='/user/login'>登入</a-button>
+              <a-space>
+                <a-button type='primary' href='/user/login'>登入</a-button>
+                <a-button type='primary' href='/user/register'>注册</a-button>
+              </a-space>
             </div>
           </div>
           <template #overlay>
-            <a-menu>
+            <a-menu v-if='useLoginuser?.loginUser?.id'>
               <a-menu-item>
                 <router-link to='/my'>
                   <SettingOutlined />
@@ -121,12 +124,6 @@ const originItems = [
     label: '图片点赞',
     title: '图片点赞'
   },
-  {
-    key: 'other',
-    label: h('a',{href: 'http://101.37.170.234'},'胖虎OJ'),
-    title: '胖虎OJ'
-  }
-
 ]
 
 const router = useRouter()
@@ -147,7 +144,6 @@ router.afterEach(to => {
  */
 const useLoginuser = useLoginuserStore()
 useLoginuser.fetchLoginUser()
-
 /**
  * 退出登入
  */

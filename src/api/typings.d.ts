@@ -866,6 +866,11 @@ declare namespace API {
     viewCount?: number
   }
 
+  type PictureAiDto = {
+    content?: string
+    name?: string
+  }
+
   type PictureEditByBatchDto = {
     category?: string
     nameRule?: string
@@ -1178,6 +1183,7 @@ declare namespace API {
   type User = {
     createTime?: string
     editTime?: string
+    email?: string
     id?: number
     isDelete?: number
     updateTime?: string
@@ -1209,6 +1215,10 @@ declare namespace API {
     userAvatar?: string
     userName?: string
     userProfile?: string
+  }
+
+  type UserEmailDto = {
+    email?: string
   }
 
   type UserLikeAddDto = {
@@ -1248,6 +1258,7 @@ declare namespace API {
 
   type UserQueryDto = {
     current?: number
+    email?: string
     id?: number
     pageSize?: number
     sortField?: string
@@ -1260,7 +1271,8 @@ declare namespace API {
 
   type UserRegisterDto = {
     checkPassword?: string
-    userAccount?: string
+    code?: string
+    email?: string
     userPassword?: string
   }
 
@@ -1274,6 +1286,7 @@ declare namespace API {
 
   type UserVO = {
     createTime?: string
+    email?: string
     id?: number
     userAccount?: string
     userAvatar?: string

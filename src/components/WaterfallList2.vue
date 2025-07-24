@@ -114,6 +114,7 @@ import Modal from '../components/ShareModal.vue'
 import CommentDrawer from './CommentDrawer.vue'
 import { addLikeMessageUsingPost } from '../api/likeMessageController'
 import {formatView} from '../utils/index'
+import { useLoginuserStore } from '../stores/loginuserStore'
 
 //  hover 状态管理（避免多个卡片互相干扰）
 const hoverStates = ref({})
@@ -146,6 +147,7 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false
 })
 
+const useLoginUser = useLoginuserStore()
 
 /**
  * 瀑布流布局
@@ -201,6 +203,9 @@ const toPictureDetail = (item) => {
  * 获取我的喜欢
  */
 const fetchMyLike = async () => {
+  if(!useLoginUser?.loginUser?.id){
+    return;
+  }
   const res = await getMyLikeUsingPost({
     targetType: 0
   })

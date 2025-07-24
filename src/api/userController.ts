@@ -144,6 +144,18 @@ export async function userRegisterUsingPost(
   })
 }
 
+/** sendMail POST /api/user/send */
+export async function sendMailUsingPost(body: API.UserEmailDto, options?: { [key: string]: any }) {
+  return request<API.BaseResponseBoolean_>('/api/user/send', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** updateUser POST /api/user/update */
 export async function updateUserUsingPost(
   body: API.UserUpdateDto,

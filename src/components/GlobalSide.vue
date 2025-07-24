@@ -73,7 +73,6 @@ router.afterEach(to => {
  * 得到用户信息值
  */
 const useLoginuser = useLoginuserStore()
-useLoginuser.fetchLoginUser()
 
 
 const spaceUserList = ref<API.SpaceUserVO[]>([])
@@ -104,6 +103,9 @@ const menuItems = computed(() => {
 
 
 const getSpaceUserList = async () => {
+  if(!useLoginuser.loginUser?.id){
+    return;
+  }
   const res = await listMySpaceUserUsingGet()
   if (res.code === 0) {
     spaceUserList.value = res.data
@@ -116,7 +118,7 @@ onMounted(() => {
 
 //监听变量
 watchEffect(() => {
-  if (useLoginuser.loginUser.id) {
+  if (useLoginuser.loginUser?.id) {
     getSpaceUserList()
   }
 })

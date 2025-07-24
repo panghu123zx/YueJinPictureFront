@@ -48,78 +48,100 @@
           </template>
           <div class='card-body'>
             <div class='chat-scroll'>
-                <a-list item-layout='horizontal' :data-source='historyMessage'>
-                  <template #renderItem='{ item }'>
-<!--                    <div v-if='time(item)' style='text-align: center;'>-->
-<!--                      {{ dayjs(item.createTime).format('YYYY-MM-DD HH:mm') }}-->
-<!--                    </div>-->
-                    <a-list-item v-if='item?.sendId===loginUserStore.loginUser.id'>
-                      <a-list-item-meta
-                        style='display: flex;flex-direction: row-reverse;'
-                      >
-                        <template #avatar>
-                          <a-avatar :src='loginUserStore.loginUser.userAvatar' :size='64' shape='square' />
-                        </template>
-                        <template #description>
-                          <a-collapse class='receive'>
-                            <a-collapse-panel :show-arrow='false' style='border: none'>
-                              <template #header>
-                                <a-image v-if='item.messageType===0' :src='item?.url' style='max-height: 220px' />
-                                <video v-else-if='item.messageType===1' :src='item?.url' controls playsinline
-                                       style='max-height: 220px;width: auto; display: block' />
-                                <audio v-else-if='item.messageType===3' :src='item?.url' controls />
-                                <div v-else>
-                                  <div>{{ item?.content }}</div>
-                                  <div v-if='item.replayId!=null'
-                                       style='background-color: #ededed;border-radius: 10px;text-align: center;'>
-                                    {{ item.replayContent }}
-                                  </div>
+              <a-list item-layout='horizontal' :data-source='historyMessage'>
+                <template #header>
+                  <a-button
+                    style='margin-left: 45%;border: none'
+                    @click='loadingMore'
+                    v-if='haveMore'>
+                    加载更多
+                  </a-button>
+                </template>
+                <template #renderItem='{ item }'>
+                  <div style='text-align: center;' v-if='item.createTime'>
+                    {{ dayjs(item.createTime).format('MM月DD日 HH:mm') }}
+                  </div>
+                  <div style='text-align: center;' v-if='item.isRecalled===1'>
+                    消息已被撤回
+                  </div>
+                  <a-list-item v-if='String (item?.sendId)===  loginUserStore.loginUser.id'>
+                    <a-list-item-meta
+                      style='display: flex;flex-direction: row-reverse;'
+                      v-if='item.isRecalled===0'
+                    >
+                      <template #avatar>
+                        <a-avatar :src='loginUserStore.loginUser.userAvatar' :size='64' shape='square' />
+                      </template>
+                      <template #title>
+                        <div class='login-name'>
+                          {{ loginUserStore.loginUser.userName }}
+                        </div>
+                      </template>
+                      <template #description>
+                        <a-collapse class='receive'>
+                          <a-collapse-panel :show-arrow='false' style='border: none'>
+                            <template #header>
+                              <a-image v-if='item.messageType===0' :src='item?.url' style='max-height: 220px' />
+                              <video v-else-if='item.messageType===1' :src='item?.url' controls playsinline
+                                     style='max-height: 220px;width: auto; display: block' />
+                              <audio v-else-if='item.messageType===3' :src='item?.url' controls />
+                              <div v-else>
+                                <div>{{ item?.content }}</div>
+                                <div v-if='item.replayId!=null'
+                                     style='background-color: #ededed;border-radius: 10px;text-align: center;'>
+                                  {{ item.replayContent }}
                                 </div>
-                              </template>
-                              <a-space>
-                                <CommentOutlined @click='replayClick(item)' />
-                                <CopyOutlined @click='clikeCopy(item)' />
-                                <ArrowLeftOutlined @click='unMessage(item)' />
-                                <SearchOutlined />
-                              </a-space>
-                            </a-collapse-panel>
-                          </a-collapse>
-                        </template>
-                      </a-list-item-meta>
-                    </a-list-item>
-                    <a-list-item v-else>
-                      <a-list-item-meta>
-                        <template #avatar>
-                          <a-avatar :src='chatMessage?.targetUserVO.userAvatar' :size='64' shape='square' />
-                        </template>
-                        <template #description>
-                          <a-collapse class='positive'>
-                            <a-collapse-panel :show-arrow='false' style='border: none'>
-                              <template #header>
-                                <a-image v-if='item.messageType===0' :src='item?.url' style='max-height: 220px' />
-                                <video v-else-if='item.messageType===1' :src='item?.url' controls playsinline
-                                       style='max-height: 220px;width: auto; display: block' />
-                                <audio v-else-if='item.messageType===3' :src='item?.url' controls />
-                                <div v-else>
-                                  <div>{{ item?.content }}</div>
-                                  <div v-if='item.replayId!=null'
-                                       style='background-color: #ededed;border-radius: 10px;text-align: center;'>
-                                    {{ item.replayContent }}
-                                  </div>
+                              </div>
+                            </template>
+                            <a-space>
+                              <CommentOutlined @click='replayClick(item)' />
+                              <CopyOutlined @click='clikeCopy(item)' />
+                              <ArrowLeftOutlined @click='unMessage(item)' />
+                              <SearchOutlined @click='toBaidu(item)'/>
+                            </a-space>
+                          </a-collapse-panel>
+                        </a-collapse>
+                      </template>
+                    </a-list-item-meta>
+                  </a-list-item>
+                  <a-list-item v-else>
+                    <a-list-item-meta v-if='item.isRecalled===0'>
+                      <template #title>
+                        <div class='login-name' style='justify-content: start;margin-left: 25px;'>
+                          {{ chatMessage?.targetUserVO.userName }}
+                        </div>
+                      </template>
+                      <template #avatar>
+                        <a-avatar :src='chatMessage?.targetUserVO.userAvatar' :size='64' shape='square' />
+                      </template>
+                      <template #description>
+                        <a-collapse class='positive'>
+                          <a-collapse-panel :show-arrow='false' style='border: none'>
+                            <template #header>
+                              <a-image v-if='item.messageType===0' :src='item?.url' style='max-height: 220px' />
+                              <video v-else-if='item.messageType===1' :src='item?.url' controls playsinline
+                                     style='max-height: 220px;width: auto; display: block' />
+                              <audio v-else-if='item.messageType===3' :src='item?.url' controls />
+                              <div v-else>
+                                <div>{{ item?.content }}</div>
+                                <div v-if='item.replayId!=null'
+                                     style='background-color: #ededed;border-radius: 10px;text-align: center;'>
+                                  {{ item.replayContent }}
                                 </div>
-                              </template>
-                              <a-space>
-                                <CommentOutlined @click='replayClick(item)' />
-                                <CopyOutlined @click='clikeCopy(item)' />
-                                <SearchOutlined />
-                              </a-space>
-                            </a-collapse-panel>
-                          </a-collapse>
-                        </template>
-                      </a-list-item-meta>
-                    </a-list-item>
-                  </template>
-                </a-list>
+                              </div>
+                            </template>
+                            <a-space>
+                              <CommentOutlined @click='replayClick(item)' />
+                              <CopyOutlined @click='clikeCopy(item)' />
+                              <SearchOutlined @click='toBaidu(item)'/>
+                            </a-space>
+                          </a-collapse-panel>
+                        </a-collapse>
+                      </template>
+                    </a-list-item-meta>
+                  </a-list-item>
+                </template>
+              </a-list>
             </div>
             <div class='SendMessage'>
               <a-flex v-if='replay===1' class='replay' justify='space-between'>
@@ -154,6 +176,7 @@
         </a-card>
       </a-col>
     </a-row>
+
   </div>
 </template>
 
@@ -202,6 +225,7 @@ const picOrFile = ref<number>(0)
 const replay = ref(0)
 const replayContent = ref('')
 const replayId = ref()
+const haveMore = ref<boolean>()
 
 const updateType = (num) => {
   picOrFile.value = num
@@ -209,7 +233,9 @@ const updateType = (num) => {
 
 const searchParams = ref<API.ChatPromptQueryDto>({
   current: 1,
-  pageSize: 10
+  pageSize: 10,
+  sortField: 'lastMessageTime',
+  sortOrder: 'descend'
 })
 //tags页的修改
 const doChange = async (key) => {
@@ -234,13 +260,13 @@ const doChange = async (key) => {
 const uploadItemClick = (item) => {
   chatMessage.value = item
 }
-//todo 时间的展示
-const time=(item)=>{
-  historyMessage?.value.forEach((data)=>{
-    if(item.id===data.id){
-
-    }
-  })
+//加载更多
+const loadingMore = () => {
+  if (websocket) {
+    websocket.sendMessage({
+      type: CHAT_MESSAGE_TYPE_ENUM.MOREHISTORY
+    })
+  }
 }
 
 //上传文件
@@ -342,6 +368,12 @@ const unReplay = () => {
 
 //撤回消息
 const unMessage = async (item) => {
+  const now = dayjs()
+  const pre = dayjs(item.createTime)
+  if (now.diff(pre, 'minute') > 5) {
+    message.error('消息发送时间超过5分钟，不能撤回')
+    return
+  }
   const res = await backMessageUsingPost({
     id: item.id
   })
@@ -356,15 +388,22 @@ const unMessage = async (item) => {
     message.error(res.msg)
   }
 }
+//搜索
+const toBaidu=(item)=>{
+  const searchUrl=`https://www.baidu.com/s?wd=${item.content}`
+  window.open(searchUrl,'_blank')
+}
 
 //子组件成功的回调
 const onSuccess = (chatKey) => {
   doChange(chatKey)
 }
-//todo 修改反向的title receiveTitle
+// 修改反向的title receiveTitle
 const onSearch = () => {
+  searchParams.value.current = 1
   searchParams.value.title = name.value
-  doChange('null')
+  searchParams.value.receiveTitle = name.value
+  doChange(null)
 }
 
 onMounted(() => {
@@ -431,6 +470,7 @@ const initWebSocket = () => {
   websocket.on(CHAT_MESSAGE_TYPE_ENUM.HISTORY, (msg: any) => {
     historyMessage.value = msg
     historyMessage.value = historyMessage.value.historyMessage.records.reverse()
+    haveMore.value = historyMessage.value.length === 20
     console.log('historyMessage', historyMessage.value)
   })
 
@@ -450,6 +490,7 @@ const initWebSocket = () => {
     console.log('收到发送之后的消息后的历史数据:', msg)
     historyMessage.value = msg
     historyMessage.value = historyMessage.value.historyMessage.records.reverse()
+    haveMore.value = historyMessage.value.length === 50
   })
 }
 
@@ -471,10 +512,10 @@ const initWebSocket = () => {
   display: flex;
   flex-direction: row-reverse;
   margin-right: 16px;
-  min-height: 64px;
+  min-height: 45px;
   padding-right: 22px;
   align-items: center;
-  background-color: rgb(236 227 227 / 30%);
+  background-color: rgb(232 246 245 / 30%);
   border-radius: 35px;
   color: black;
 }
@@ -482,10 +523,10 @@ const initWebSocket = () => {
 .positive {
   display: flex;
   margin-left: 16px;
-  min-height: 64px;
+  min-height: 45px;
   padding-left: 22px;
   align-items: center;
-  background-color: rgb(236 227 227 / 30%);
+  background-color: rgb(232 246 245 / 30%);
   border-radius: 35px;
   color: black;
 }
@@ -538,5 +579,13 @@ const initWebSocket = () => {
   padding-left: 10px;
   color: white;
   align-items: center;
+}
+
+.login-name {
+  display: flex;
+  justify-content: end;
+  margin-right: 25px;
+  font-size: 12px;
+  color: #4b4b4b;
 }
 </style>

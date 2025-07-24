@@ -119,6 +119,9 @@ const doChangePages = (page, pageSize) => {
   props.onSuccess(props.chatKey)
 }
 
+const doDelete=async (item)=>{
+
+}
 </script>
 <style scoped>
 #chat {

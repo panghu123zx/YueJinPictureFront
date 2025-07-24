@@ -2,6 +2,21 @@
 /* eslint-disable */
 import request from '@/request'
 
+/** uploadAiPicture POST /api/picture/aipicture */
+export async function uploadAiPictureUsingPost(
+  body: API.PictureAiDto,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePictureVO_>('/api/picture/aipicture', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** createOutPaintingTask POST /api/picture/create/task */
 export async function createOutPaintingTaskUsingPost(
   body: API.CreatePictureOutPaintingTaskDto,
