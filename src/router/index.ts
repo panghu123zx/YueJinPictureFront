@@ -17,6 +17,7 @@ import SpaceAnalyzePage from '../pages/SpaceAnalyzePage.vue'
 import SpaceUserManagerPage from '../pages/SpaceUserManagerPage.vue'
 import ImageByPictureSearch from '../pages/ImageByPictureSearch.vue'
 import MyLikeSharePic from '../pages/MyLikeSharePic.vue'
+import UserPage from '../pages/UserPage.vue'
 import UserLoginPage from '../pages/user/UserLoginPage.vue'
 import UserRegisterPage from '../pages/user/UserRegisterPage.vue'
 import UserManagerPage from '../pages/admin/UserManagerPage.vue'
@@ -105,6 +106,12 @@ const router = createRouter({
       props: true
     },
     {
+      path: '/user/:id',
+      name: 'userpage',
+      component: UserPage,
+      props: true
+    },
+    {
       path: '/space/:id',
       name: 'spacedetail',
       component: SpaceDetailPage,
@@ -152,6 +159,6 @@ const router = createRouter({
       props: true
     },
   ]
-})
+} as any)
 
 export default router

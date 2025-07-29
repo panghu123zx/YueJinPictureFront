@@ -1,12 +1,12 @@
 <template>
   <div id='globalSide'>
     <a-layout-sider
-      :style="{  position: 'sticky', left: 0, top: 0, bottom: 0 }"
+      :style="{  position: 'sticky', left: 0, top: 0, bottom: 0 ,background: '#fff'}"
       width='200'
       v-if='useLoginuser.loginUser?.id'
       breakpoint='lg'
-      collapsed-width='0'
-      :collapsible='true'
+      v-model:collapsed="collapsed"
+      collapsible
     >
       <a-menu
         v-model:selectedKeys='current'
@@ -19,14 +19,14 @@
 </template>
 <script lang='ts' setup>
 import { computed, h, onMounted, ref, watchEffect } from 'vue'
-import { UserOutlined, PictureOutlined, TeamOutlined,CloudUploadOutlined } from '@ant-design/icons-vue'
+import { UserOutlined, PictureOutlined, TeamOutlined,CloudUploadOutlined,UsergroupAddOutlined } from '@ant-design/icons-vue'
 import { useLoginuserStore } from '../stores/loginuserStore'
 import { useRouter } from 'vue-router'
 import { MenuProps, message } from 'ant-design-vue'
 import { SPACE_TYPE_ENUM } from '../constants/spaceuser'
 import { listMySpaceUserUsingGet } from '../api/spaceUserController'
 
-
+const collapsed = ref(false)
 
 const current = ref<string[]>([])
 
@@ -86,7 +86,8 @@ const menuItems = computed(() => {
     const space = spaceUser.space
     return {
       key: '/space/' + spaceUser.spaceId,
-      label: space?.spaceName
+      label: space?.spaceName,
+      icon: () => h(UsergroupAddOutlined  ,{ style: 'color: #fdd694;font-size: large' })
     }
   })
 
@@ -153,4 +154,10 @@ watchEffect(() => {
 :deep(.ant-menu-item-active){
    background-color: #bedcf5;
  }
+
+:deep(.ant-layout-sider-trigger){
+  height: 100px;
+  background: white;
+  color: #7ed321;
+}
 </style>

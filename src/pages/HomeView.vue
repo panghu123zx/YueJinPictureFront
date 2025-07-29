@@ -1,32 +1,44 @@
 <template>
   <div id='home'>
-    <!--    搜索信息-->
-    <div class='search-bar'>
-      <a-input-search
-        v-model:value='searchParams.searchText'
-        placeholder='从海量图库中搜索'
-        enter-button
-        size='large'
-        @search='doSearch'
-      />
-    </div>
-    <a-tabs v-model:activeKey='selectCategory' @change='doSearch'>
-      <a-tab-pane key='all' tab='全部' />
-      <a-tab-pane v-for='cat in categoryTagList?.categoryList' :key='cat' :tab='cat' />
-    </a-tabs>
-
-    <span style='margin-right: 8px'>标签:</span>
-    <a-space :size='[0, 8]' wrap>
-      <a-checkable-tag
-        v-for='(tag, index) in categoryTagList?.tagList'
-        :key='tag'
-        v-model:checked='selectTagsList[index]'
+    <div class='header'>
+      <!--    搜索信息-->
+      <a-flex justify='space-between'>
+        <a-space style='margin-left: 35px;'>
+          <a-button @click='getAll' :class='{"btn-back" : changeAll===0}'>发现</a-button>
+          <a-button @click='getFollow' :class='{"btn-back" : changeAll===1}' >关注</a-button>
+          <a-button @click='getFour' :class='{"btn-back" : changeAll===2}' >4K图片</a-button>
+        </a-space>
+        <div class='search-bar'>
+          <a-input-search
+            v-model:value='searchParams.searchText'
+            placeholder='从海量图库中搜索'
+            enter-button
+            size='large'
+            @search='doSearch'
+          />
+        </div>
+      </a-flex>
+      <a-tabs
+        v-model:activeKey='selectCategory'
         @change='doSearch'
-      >
-        {{ tag }}
-      </a-checkable-tag>
-    </a-space>
-    <div style='margin-bottom: 16px;'></div>
+        style='margin-left: 16px;'
+        type='card'>
+        <a-tab-pane key='all' tab='全部' />
+        <a-tab-pane v-for='cat in categoryTagList?.categoryList' :key='cat' :tab='cat' />
+      </a-tabs>
+
+      <span style='margin-right: 8px;margin-left: 35px; color: white'>标签:</span>
+      <a-space :size='[0, 8]' wrap>
+        <a-checkable-tag
+          v-for='(tag, index) in categoryTagList?.tagList'
+          :key='tag'
+          v-model:checked='selectTagsList[index]'
+          @change='doSearch'
+        >
+          <span style='color: white'>{{ tag }}</span>
+        </a-checkable-tag>
+      </a-space>
+    </div>
     <!-- 图片列表 -->
     <div v-if='loading'>
       <a-spin size='large' tip='加载中...' />
@@ -58,6 +70,7 @@
 <script setup lang='ts'>
 import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import {
+  getFollowPictureUsingPost,
   getListPictureByVoUsingPost,
   listPictureTagCategoryUsingGet
 } from '../api/pictureController'
@@ -83,12 +96,14 @@ const showBottom = ref(false)
 
 const loadingLock = ref(false)
 
-
+//获取的标签结果
 const categoryTagList = ref<API.PictureTagCategory>()
-
-
+//选择的分类
 const selectCategory = ref<string>('all')
+//选择的标签
 const selectTagsList = ref<string[]>([])
+//0-全部 ，1-关注 2-4K图片
+const changeAll=ref(0)
 
 /**
  * 搜索条件
@@ -99,6 +114,39 @@ const searchParams = reactive<API.PictureQueryDto>({
   homeShow: 'home'
 })
 
+
+/**
+ * 获取全部
+ */
+const getAll =async  () => {
+  changeAll.value=0
+  dataList.value=[]
+  searchParams.is4K=0
+  searchParams.current=1
+  loadingFinish.value = false
+  await fetchPictureData()
+}
+
+/**
+ * 获取关注
+ */
+const getFollow = async () => {
+  changeAll.value=1
+  searchParams.current=1
+  searchParams.is4K=0
+  dataList.value=[]
+  loadingFinish.value = false
+  await fetchPictureData()
+}
+
+const getFour =async ()=>{
+  changeAll.value=2
+  searchParams.current=1
+  dataList.value=[]
+  searchParams.is4K=1
+  loadingFinish.value = false
+  await fetchPictureData()
+}
 
 /**
  * 搜索参数的构造
@@ -119,7 +167,13 @@ const fetchData = async () => {
       params.tags.push(categoryTagList?.value.tagList?.[index])
     }
   })
-  const res = await getListPictureByVoUsingPost(params)
+  //判断获取的是全部图片，还是关注的图片
+  let res;
+  if(changeAll.value===0 || changeAll.value===2){
+    res = await getListPictureByVoUsingPost(params)
+  }else{
+    res= await getFollowPictureUsingPost(params)
+  }
   if (res.data) {
     dataList.value = res.data.records ?? []
   } else {
@@ -161,10 +215,17 @@ const fetchPictureData = async () => {
       }
     })
   }
+  let res;
+  if(changeAll.value===0 || changeAll.value===2){
+    res = await getListPictureByVoUsingPost({
+      ...searchParams
+    })
+  }else{
+    res= await getFollowPictureUsingPost({
+      ...searchParams
+    })
+  }
 
-  const res = await getListPictureByVoUsingPost({
-    ...searchParams
-  })
   if (res.code === 0 && res.data) {
     const newRecords = res.data.records || []
     dataList.value = [...dataList.value, ...newRecords]
@@ -274,13 +335,62 @@ const handlescrolldebound = dobounce(handleScroll, 200)
 }
 
 .search-bar {
-  max-width: 480px;
+  min-width: 480px;
   margin: 0 auto 16px;
+  padding-top: 16px;
 }
 
 .scrollTop {
   margin-bottom: 43px;
   margin-right: 38px;
   opacity: 0.5;
+}
+
+.header{
+  margin-bottom: 16px;
+  background-image: url("../assets/homeimg.jpg");
+  background-size: 100% 175px;
+  width: 100%;
+  height: 175px;
+}
+.btn-back{
+  background-color: #b4cbf4;
+  color: white;
+  border: none;
+}
+
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab) {
+  width: 84px;
+  background-color: #f5f7fa;
+  border-radius: 15px !important;
+  height: 36px;
+  margin-left: 15px;
+  justify-content: center;
+}
+
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab-active) {
+  background-color: #b4cbf4;
+  color: white;
+}
+
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+  color: white;
+}
+
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
+:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-bottom >.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
+:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >div>.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
+:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-bottom >div>.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab) {
+  margin-left: 10px;
+}
+
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >.ant-tabs-nav .ant-tabs-tab-active,
+:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >div>.ant-tabs-nav .ant-tabs-tab-active) {
+  border-bottom-color: #b4cbf4;
+}
+
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tag-checkable-checked){
+  background-color: #99add2;
+  border-radius: 6px;
 }
 </style>

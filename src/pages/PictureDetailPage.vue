@@ -1,15 +1,17 @@
 <template>
-  <a-row :gutter='[16,16]'>
+  <a-row :gutter='[16,16]' style='height: 100%'>
     <a-col :sm='24' :md='16' :xl='18'>
-      <a-card title='图片预览' style='text-align: center; '>
-        <a-image :src='picture?.url' :alt='picture?.name' style='max-height: 600px; object-fit: contain' />
+      <a-card class='image-card' :style='{
+                 ...(picture?.picColor ? { backgroundColor: `${toHexColor(picture?.picColor)}4D` } : {})
+              }'>
+        <a-image :src='picture?.url' :alt='picture?.name' style='max-height: 740px; object-fit: contain' />
       </a-card>
     </a-col>
     <a-col :sm='24' :md='8' :xl='6'>
-      <a-card title='图片信息'>
+      <a-card title='图片信息' style='height: 100%'>
         <a-descriptions :column='1'>
-          <a-descriptions-item>
-            <a-space>
+          <a-descriptions-item >
+            <a-space @click='router.push(`/user/${picture?.user?.id}`)'>
               <a-avatar :src='picture?.user?.userAvatar ' :size='48' />
               <a-space style=' display: flex;flex-direction: column;'>
                 {{ picture?.user?.userName }}
@@ -19,7 +21,6 @@
                 </span>
               </a-space>
             </a-space>
-
           </a-descriptions-item>
           <a-descriptions-item label='名称'>
             {{ picture?.name }}
@@ -72,6 +73,11 @@
                   <CommentOutlined style='color: white; font-size: medium' />
                 </template>
               </a-button>
+              <a-button @click='toImageByPic'  style='background-color: rgb(172 171 171); width: 45px'>
+                <template #icon>
+                  <SearchOutlined  style='color: white; font-size: medium' />
+                </template>
+              </a-button>
             </a-space>
           </a-descriptions-item>
 
@@ -93,7 +99,8 @@ import {
   EditOutlined,
   DownloadOutlined,
   ShareAltOutlined,
-  CommentOutlined
+  CommentOutlined,
+  SearchOutlined
 } from '@ant-design/icons-vue'
 import { useLoginuserStore } from '../stores/loginuserStore'
 import { useRouter } from 'vue-router'
@@ -167,6 +174,16 @@ const doEdit = () => {
   })
 }
 
+/**
+ * 以图搜图
+ */
+const toImageByPic = () => {
+  router.push(`/imagesearch?pictureId=${picture.value.id}`)
+}
+
+/**
+ * 删除图片
+ */
 const doDelete = async () => {
   const res = await deletePictureUsingPost({
     id: picture.value.id
@@ -184,15 +201,16 @@ const doDownload = () => {
   downloadImage(picture.value.url)
 }
 
+/**
+ * 分享图片
+ */
 const modalRef = ref()
 const link = ref('')
-
 const doShare = async () => {
   link.value = `${window.location.protocol}//${window.location.host}/picture/${picture.value.id}`
   if (modalRef.value) {
     modalRef.value.openModal()
   }
-
   await addUserShareUsingPost({
     targetId: picture.value.id,
     targetType: 0,
@@ -206,7 +224,9 @@ const doShare = async () => {
     actionType: 1
   })
 }
-
+/**
+ * 评论图片
+ */
 const commentRef = ref()
 const toComment = () => {
   if (commentRef.value) {
@@ -248,5 +268,10 @@ const doFollow = async (statu) => {
 </script>
 
 <style scoped>
-
+.image-card{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
 </style>

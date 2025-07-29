@@ -75,5 +75,11 @@ const fetchUser = async () => {
 </script>
 
 <style scoped>
+:deep(x-vue-echarts div){
+  width: 100% !important;
+}
+:deep(x-vue-echarts div canvas){
+  width: 100% !important;
+}
 
 </style>

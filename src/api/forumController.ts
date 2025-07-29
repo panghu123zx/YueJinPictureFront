@@ -123,6 +123,21 @@ export async function deleteForumFileListUsingPost(
   })
 }
 
+/** getFollowFor POST /api/forum/follow/for */
+export async function getFollowForUsingPost(
+  body: API.ForumQueryDto,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePageForumVO_>('/api/forum/follow/for', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** getForum GET /api/forum/get */
 export async function getForumUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

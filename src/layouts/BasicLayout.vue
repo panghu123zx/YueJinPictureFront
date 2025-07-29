@@ -28,7 +28,7 @@ import GlobalSide from '../components/GlobalSide.vue'
 <style scoped>
 #BasicLayout .footer {
   text-align: center;
-  position: fixed;
+  position: relative;
   bottom: 0;
   left: 0;
   right: 0;

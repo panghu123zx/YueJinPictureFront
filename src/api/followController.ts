@@ -37,6 +37,21 @@ export async function getFollowMyUsingPost(
   })
 }
 
+/** getFollowCountByUser GET /api/follow/get/usercount */
+export async function getFollowCountByUserUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getFollowCountByUserUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseFollow_>('/api/follow/get/usercount', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
 /** isFollow POST /api/follow/isfollow */
 export async function isFollowUsingPost(
   body: API.FollowQueryDto,

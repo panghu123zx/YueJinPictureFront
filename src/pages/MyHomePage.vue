@@ -6,7 +6,7 @@
           <a-avatar :size='100' :src='user?.userAvatar ' />
           <a-typography>
             <a-typography-paragraph style='margin-bottom: 1px;'>{{ user?.userName }}</a-typography-paragraph>
-            <a-typography-paragraph style='margin-bottom: 1px; '>{{ user?.userAccount }}</a-typography-paragraph>
+            <a-typography-paragraph style='margin-bottom: 1px; '>账号：{{ user?.userAccount }}</a-typography-paragraph>
             <a-typography-paragraph style='margin-bottom: 1px;color: #7c6b6b'>简介: {{ user?.userProfile }}
               <a-typography-paragraph style='margin-bottom: 1px;color: #7c6b6b'>
                 <a-space>
@@ -18,8 +18,11 @@
           </a-typography>
         </a-space>
       </a-card>
-
-      <a-card title='我发布的评论' style='margin-top: 16px;'>
+      <a-card title='空间使用分析' style='margin-top: 16px;'>
+        <SpaceUserAnalyzePage v-if='space' :spaceId='space?.id' :queryAll='false' :queryPublic='false' />
+        <div v-else>
+          <a-spin />
+        </div>
       </a-card>
     </a-col>
     <a-col :span='9'>
@@ -54,6 +57,8 @@ import EditUserInfo from '../components/EditUserInfo.vue'
 import FollowPage from '../components/FollowPage.vue'
 import dayjs from 'dayjs'
 import { getFollowCountUsingGet } from '../api/followController'
+import { getListSpaceByVoUsingPost } from '../api/spaceController'
+import SpaceUserAnalyzePage from '../components/spaceAnalyze/SpaceUserAnalyzePage.vue'
 
 
 const router = useRouter()
@@ -62,6 +67,7 @@ const editUserInfo = ref()
 const followPage = ref()
 const loginUserStore = useLoginuserStore()
 const user = ref<API.UserVO>()
+const space=ref<API.SpaceVO>()
 //粉丝数
 const fansCount = ref()
 //关注数
@@ -93,6 +99,27 @@ const fetchFollowCount = async () => {
   }
 }
 
+//进入个人空间界面的权限校验
+const checkUserSpace = async () => {
+  //找到当前登入用户的个人空间
+  const res = await getListSpaceByVoUsingPost({
+    userId: loginUserStore.loginUser?.id,
+    current: 1,
+    pageSize: 1
+  })
+  if (res.code == 0) {
+    //当前用户没有创建个人空间，跳转到新建个人空间
+    if (res.data.records.length === 0) {
+      message.warn("创建个人空间才能查看信息")
+    } else {
+      //创建了就取第一个
+      space.value = res.data.records[0]
+    }
+  } else {
+    message.error('获取个人空间信息失败：' + res.data)
+  }
+}
+
 
 /**
  * 退出登入
@@ -112,6 +139,7 @@ const doLogout = async () => {
 onMounted(() => {
   fetchData()
   fetchFollowCount()
+  checkUserSpace()
 })
 //修改密码
 const changeUserPwd = () => {

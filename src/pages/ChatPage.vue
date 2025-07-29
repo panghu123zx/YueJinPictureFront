@@ -112,7 +112,9 @@
                         </div>
                       </template>
                       <template #avatar>
-                        <a-avatar :src='chatMessage?.targetUserVO.userAvatar' :size='64' shape='square' />
+                        <a-avatar :src='chatMessage?.targetUserVO.userAvatar'
+                                  :size='64' shape='square'
+                                  @click='router.push(`/user/${chatMessage?.targetUserVO.id}`)' />
                       </template>
                       <template #description>
                         <a-collapse class='positive'>
@@ -204,7 +206,9 @@ import {
 import { addAudioFileUsingPost } from '../api/audioFileController'
 import { backMessageUsingPost } from '../api/chatMessageController'
 import dayjs from 'dayjs'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const loginUserStore = useLoginuserStore()
 const chatKey = ref('null')
 let websocket: ChatWebSocket | null

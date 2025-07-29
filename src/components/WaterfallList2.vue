@@ -31,12 +31,7 @@
                   v-if='hoverStates[item.id]'
                   class='author-info'
                 >
-                  <a-avatar
-                    v-if='item.user.userAvatar'
-                    :src='item.user.userAvatar'
-                    class='author-avatar'
-                  />
-                  <span class='author-name'>{{ item.user.userName }}</span>
+                  <span class='author-name'>{{item.name}}</span>
                 </div>
               </transition>
             </div>
@@ -65,27 +60,18 @@
                         two-tone-color='#f5a0af'
                       />
                     </a-space>
-                    <a-space @click='doSharePicture(item)'>
-                      <ShareAltOutlined />
-                    </a-space>
-                    <a-space @click='toComment(item)'>
-                      <CommentOutlined />
-                    </a-space>
-                    <a-space @click='toImageByPic(item)'>
-                      <SearchOutlined />
-                    </a-space>
+<!--                    <a-space @click='toComment(item)'>-->
+<!--                      <CommentOutlined />-->
+<!--                    </a-space>-->
                   </a-space>
                 </div>
               </div>
             </transition-group>
-            <!-- 常驻图片名称 -->
-            <div class='image-name'>{{ item.name || '1' }}</div>
           </div>
         </template>
       </Waterfall>
     </div>
-    <Modal ref='modalRef' :link='link' :url='url' />
-    <CommentDrawer ref='commentRef' :id='pictureId' :targetType='0' :targetUserId='targetUserId'/>
+<!--    <CommentDrawer ref='commentRef' :id='pictureId' :targetType='0' :targetUserId='targetUserId'/>-->
   </div>
 
 </template>
@@ -132,17 +118,12 @@ const router = useRouter()
 
 
 interface Props {
-  dataList: () => [],
+  dataList: API.PictureVO[],
   showOptions: boolean,
   loading: boolean,
-  onReload: () => {},
-  canEdit: boolean,
-  canDelete: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  canEdit: false,
-  canDelete: false,
   showOptions: false,
   loading: false
 })
@@ -155,7 +136,7 @@ const useLoginUser = useLoginuserStore()
 const breakpoints = ref({
   3000: {
     //当屏幕宽度小于等于3000
-    rowPerView: 7 // 一行8图
+    rowPerView: 8 // 一行8图
   },
   1800: {
     rowPerView: 6
@@ -220,41 +201,9 @@ onMounted(() => {
   fetchMyLike()
 })
 
-/**
- * 以图搜图
- */
-const toImageByPic = (item) => {
-  router.push(`/imagesearch?pictureId=${item.id}`)
-}
 
-/**
- * 分享图片
- */
-const link = ref<string>()
-const modalRef = ref()
-const url = ref<string>()
-const doSharePicture = async (item) => {
-  link.value = `${window.location.protocol}//${window.location.host}/picture/${item.id}`
-  url.value = item.url
-  item.shareCount++
-  if (modalRef.value) {
-    modalRef.value.openModal()
-  }
-  //记录分享
-  await addUserShareUsingPost({
-    targetId: item.id,
-    targetType: 0,
-    likeShare: 1
-  })
 
-  //发送消息
-  await addLikeMessageUsingPost({
-    receiverId: item.userId,
-    targetType: 0,
-    targetId: item.id,
-    actionType: 1
-  })
-}
+
 
 /**
  * 添加点赞
@@ -315,7 +264,6 @@ const toComment = (item) => {
 
 <style scoped>
 .waterfall-container {
-  padding: 16px;
 }
 
 .custom-card {
@@ -331,8 +279,23 @@ const toComment = (item) => {
 
 .image-wrap {
   position: relative;
+  display: inline-block;
   width: 100%;
+  overflow: hidden;
 }
+
+.image-wrap .card-image{
+  transition: transform 0.3s ease; /* 添加过渡动画 */
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-wrap:hover .card-image{
+  transform: scale(1.1);
+}
+
+
 
 .card-image {
   width: 100%;
@@ -361,7 +324,7 @@ const toComment = (item) => {
   height: 100%;
   display: flex;
   align-items: flex-start;
-  padding-top: 40px; /* 给作者信息留出空间 */
+  padding-top: 40px;
   z-index: 3;
   transform: translateX(1%);
   transition: transform 0.3s ease;
@@ -377,10 +340,8 @@ const toComment = (item) => {
   left: 8px;
   display: flex;
   align-items: center;
-  background: rgb(166, 153, 153, 0.5);
   padding: 6px 10px;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -392,29 +353,16 @@ const toComment = (item) => {
   transform: translateY(0);
 }
 
-.author-avatar {
-  margin-right: 8px;
-}
-
 .author-name {
-  font-size: 14px;
+  color: white;
 }
 
 .actions {
-  background: rgb(149 144 144 / 50%);
+  margin-right: 8px;
+  background: rgb(137 134 134 / 40%);
   padding: 12px;
-  border-radius: 8px 0 0 8px;
+  border-radius: 8px;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
-}
-
-.image-name {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  text-align: left;
-  font-size: 14px;
-  color: #333;
-  margin-top: 4px;
 }
 
 /* 右侧滑入动画 */

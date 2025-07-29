@@ -598,6 +598,11 @@ declare namespace API {
     viewCount?: number
   }
 
+  type getFollowCountByUserUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
   type getForumUsingGETParams = {
     /** id */
     id?: number
@@ -896,6 +901,7 @@ declare namespace API {
     homeShow?: string
     id?: number
     introduction?: string
+    is4K?: number
     likeCount?: number
     name?: string
     pageSize?: number
@@ -1212,7 +1218,6 @@ declare namespace API {
 
   type UserEditDto = {
     id?: number
-    userAvatar?: string
     userName?: string
     userProfile?: string
   }

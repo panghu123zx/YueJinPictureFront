@@ -105,7 +105,6 @@ const doChangePages = (page, pageSize) => {
 //获取个人空间图片信息
 const fetchSpacePicture = async () => {
   loading.value = true
-
   const res = await getListPictureByVoUsingPost({
     spaceId: props.id as number,
     ...searchParams

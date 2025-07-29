@@ -5,6 +5,7 @@
         <a-card :title='forum?.title' :bordered='false'>
           <a-card-meta :title='forum?.userVO.userName'
                        :description="dayjs(forum?.createTime).format('MM月DD日HH:mm')"
+                       @click='router.push(`/user/${forum?.userVO?.id}`)'
                        style='background-color: #f8f5f3;border-radius: 7px;margin-bottom: 5px;'>
             <template #avatar>
               <a-avatar :src='forum?.userVO.userAvatar' :size='48' />

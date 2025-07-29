@@ -52,20 +52,21 @@
 
       </a-col>
     </a-row>
-
+<AllUploadPage  ref='allUploadPage'/>
   </div>
 </template>
 <script setup lang='ts'>
 import { computed, h, ref } from 'vue'
-import { HomeOutlined, LogoutOutlined,UserOutlined ,SettingOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined, LogoutOutlined,UserOutlined ,SettingOutlined,PlusOutlined } from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginuserStore } from '../stores/loginuserStore'
 import { userLogoutUsingGet } from '../api/userController'
-
+import AllUploadPage from './AllUploadPage.vue'
 
 const loginUserStore = useLoginuserStore()
 const current = ref<string[]>([])
+const allUploadPage=ref()
 
 const originItems = [
   {
@@ -78,6 +79,10 @@ const originItems = [
     key: '/forum',
     label: '论坛',
     title: '论坛'
+  },
+  {
+    key: 'model',
+    icon: () => h(PlusOutlined ,{ style: 'color: white;font-size: large;justify-content: center;' }),
   },
   {
     key: '/message',
@@ -95,16 +100,6 @@ const originItems = [
     title: '用户管理'
   },
   {
-    key: '/addpicture',
-    label: '创建图片',
-    title: '创建图片'
-  },
-  {
-    key: '/addforum',
-    label: '创建论坛',
-    title: '创建论坛'
-  },
-  {
     key: '/admin/picturemanager',
     label: '图片管理',
     title: '图片管理'
@@ -119,18 +114,20 @@ const originItems = [
     label: '论坛管理',
     title: '论坛管理'
   },
-  {
-    key: '/likesharepic',
-    label: '图片点赞',
-    title: '图片点赞'
-  },
 ]
 
 const router = useRouter()
 const doMenu = ({ key }: { key: String }) => {
-  router.push({
-    path: key
-  })
+  if(key==='model'){
+    if(allUploadPage){
+      allUploadPage.value.openModal()
+    }
+  }else{
+    router.push({
+      path: key
+    })
+  }
+
 }
 /**
  * 得到显示的导航栏值
@@ -190,8 +187,15 @@ const items = computed<MenuProps['items']>(() => filterItems(originItems))
   margin-left: 12px;
 }
 
-
-
-.login-status {
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
+.ant-menu-item.ant-menu-item-only-child >.anticon,
+:where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
+.ant-menu-submenu-title.ant-menu-item-only-child >.anticon, :where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
+.ant-menu-item.ant-menu-item-only-child
+>.ant-menu-item-icon, :where(.css-dev-only-do-not-override-1p3hq3p).ant-menu .ant-menu-submenu-title.ant-menu-item-only-child >.ant-menu-item-icon){
+  width: 44px;
+  height: 44px;
+  background-color: #7ed321;
+  border-radius: 52%;
 }
 </style>
