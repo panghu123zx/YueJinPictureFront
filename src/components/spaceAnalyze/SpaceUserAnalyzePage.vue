@@ -2,9 +2,9 @@
   <div id='SpaceSizeAnalyzePage'>
     <a-card title='用户上传分析'>
       <template #extra>
-        <a-space>
+        <a-space >
           <a-segmented v-model:value='timeDimension' :options='timeDimensionOptions' />
-          <a-input-search placeholder='请输入用户id' enter-button='搜索用户' @search='doSearch'  />
+          <a-input-search placeholder='请输入用户id' enter-button='搜索用户' @search='doSearch' v-if='loginUserStore.loginUser.userRole === "admin"' />
         </a-space>
       </template>
       <v-chart :option='option' style='max-width: 100%; height: 400px;' :loading='loading'/>
@@ -21,6 +21,7 @@ import {
 spaceUserAnalyzeUsingPost
 } from '../../api/spaceAnalyzeController'
 import { message } from 'ant-design-vue'
+import { useLoginuserStore } from '../../stores/loginuserStore'
 
 interface Props {
   queryPublic: boolean
@@ -53,6 +54,7 @@ const doSearch = (value) => {
   userId.value = value
 }
 
+const loginUserStore = useLoginuserStore()
 
 //获取空间的使用情况
 const getSpaceUserInfo = async () => {

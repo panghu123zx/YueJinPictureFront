@@ -156,11 +156,11 @@ const deleteComment = async (item) => {
   const res = await deleteCommentUsingPost({
     id: item.id
   })
-  if (res.code === 0) {
+  if (res.code === 0&&res.data) {
     message.success('删除成功')
     fetchCommentData()
   } else {
-    message.error('删除失败')
+    message.error('删除失败'+res.data)
   }
 }
 
@@ -171,12 +171,12 @@ const doAddLike = async (item) => {
   const res = await likeCommentUsingPost({
     id: item.id
   })
-  if (res.code === 0) {
+  if (res.code === 0&&res.data) {
     message.success('点赞成功')
     item.likeCount++
     likeComment.value.push(item.id)
   } else {
-    message.error('点赞失败' + res.message)
+    message.error('点赞失败' + res.data)
   }
 }
 
@@ -192,7 +192,7 @@ const fetchCommentData = async () => {
   if (res.code === 0 && res.data) {
     commentList.value = res.data
   } else {
-    message.error('获取评论失败' + res.message)
+    message.error('获取评论失败' + res.data)
   }
 }
 
@@ -216,10 +216,10 @@ const doAddComment = async () => {
   const res = await addCommentUsingPost({
     ...params.value
   })
-  if (res.code === 0) {
+  if (res.code === 0 && res.data) {
     message.success('评论成功')
   } else {
-    message.error('评论失败' + res.message)
+    message.error('评论失败' + res.data)
   }
   content.value = ''
   isShow.value = false

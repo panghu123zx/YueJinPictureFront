@@ -11,10 +11,13 @@
       <a-card title='图片信息' style='height: 100%'>
         <a-descriptions :column='1'>
           <a-descriptions-item >
-            <a-space @click='router.push(`/user/${picture?.user?.id}`)'>
-              <a-avatar :src='picture?.user?.userAvatar ' :size='48' />
+            <a-space >
+              <a-avatar :src='picture?.user?.userAvatar ' :size='48'  @click='router.push(`/user/${picture?.user?.id}`)'/>
               <a-space style=' display: flex;flex-direction: column;'>
-                {{ picture?.user?.userName }}
+                <div  @click='router.push(`/user/${picture?.user?.id}`)'>
+                  {{ picture?.user?.userName }}
+                </div>
+
                 <span v-if='loginUserStore.loginUser.id !== picture?.user?.id'>
                   <a-button @click='doFollow(0)' v-if='!followStatus'>关注</a-button>
                   <a-button @click='doFollow(1)' v-else>取消关注</a-button>
@@ -153,16 +156,6 @@ onMounted(() => {
   fetchPicture()
 })
 
-const canEdit = computed(() => {
-  const loginUser = loginUserStore.loginUser
-  //没登入不可以编辑
-  if (!loginUser) {
-    return false
-  }
-  //本人和管理员可以编辑
-  const user = picture.value?.user || {}
-  return loginUser?.id === user.id || loginUser?.userRole === 'admin'
-})
 
 const doEdit = () => {
   router.push({

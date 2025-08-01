@@ -104,7 +104,7 @@ const handleUpload = async ({ file }: any) => {
     if (res.code === 0 && res.data) {
       editUser.value.userAvatar = res.data
     } else {
-      message.error('上传图片失败')
+      message.error('上传图片失败'+res.data)
     }
   } catch (e) {
     message.error('上传图片失败:{}', e.message)

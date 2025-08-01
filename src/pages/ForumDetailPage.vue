@@ -32,10 +32,10 @@
             <LinkOutlined @click='doShare' />
             {{ forum?.shareCount }}
           </p>
-          <p>
+          <p v-if='forum?.canEdit'>
             <EditOutlined @click='doEdit'/>
           </p>
-          <p>
+          <p v-if='forum?.canDelete'>
             <DeleteOutlined  @click='doDelete'/>
           </p>
         </div>
@@ -134,7 +134,7 @@ const processedContent = computed(() => {
       return `<img
                    src="${imgMap[index]}"
                    alt="图片"
-                   style="max-width: 100%; margin: 10px auto; border-radius: 4px; display: block;"/>`;
+                   style="max-height: 200px; margin: 10px auto; border-radius: 4px; display: block;"/>`;
     }
     return match; // 没有找到对应图片则保持原样
   });

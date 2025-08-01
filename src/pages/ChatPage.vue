@@ -84,7 +84,7 @@
                               <a-image v-if='item.messageType===0' :src='item?.url' style='max-height: 220px' />
                               <video v-else-if='item.messageType===1' :src='item?.url' controls playsinline
                                      style='max-height: 220px;width: auto; display: block' />
-                              <audio v-else-if='item.messageType===3' :src='item?.url' controls />
+                              <audio v-else-if='item.messageType===2' :src='item?.url' controls />
                               <div v-else>
                                 <div>{{ item?.content }}</div>
                                 <div v-if='item.replayId!=null'
@@ -123,7 +123,7 @@
                               <a-image v-if='item.messageType===0' :src='item?.url' style='max-height: 220px' />
                               <video v-else-if='item.messageType===1' :src='item?.url' controls playsinline
                                      style='max-height: 220px;width: auto; display: block' />
-                              <audio v-else-if='item.messageType===3' :src='item?.url' controls />
+                              <audio v-else-if='item.messageType===2' :src='item?.url' controls />
                               <div v-else>
                                 <div>{{ item?.content }}</div>
                                 <div v-if='item.replayId!=null'
@@ -474,7 +474,7 @@ const initWebSocket = () => {
   websocket.on(CHAT_MESSAGE_TYPE_ENUM.HISTORY, (msg: any) => {
     historyMessage.value = msg
     historyMessage.value = historyMessage.value.historyMessage.records.reverse()
-    haveMore.value = historyMessage.value.length === 20
+    haveMore.value = historyMessage.value.length === 50
     console.log('historyMessage', historyMessage.value)
   })
 

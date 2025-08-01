@@ -70,7 +70,7 @@ const doSubmit = async () => {
     //开启轮询
     startPolling()
   } else {
-    message.error('生成图片失败')
+    message.error('生成图片失败'+res.data)
   }
 }
 

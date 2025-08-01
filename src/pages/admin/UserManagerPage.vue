@@ -113,11 +113,11 @@ const fetchUserList = async () => {
   const res = await getListUserByPageUsingPost({
     ...searchParams
   })
-  if (res.code === 0) {
+  if (res.code === 0&&res.data) {
     dataList.value = res.data.records ?? []
     total.value = res.data.total ?? 0
   } else {
-    message.error('获取数据失败' + res.message)
+    message.error('获取数据失败' + res.data)
   }
 }
 

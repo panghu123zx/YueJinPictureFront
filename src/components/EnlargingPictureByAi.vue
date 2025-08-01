@@ -101,7 +101,7 @@ const startPolling = () => {
           resultImage.value = output?.outputImageUrl
           clearPolling()
         } else if (res.data?.status === 'FAILED') {
-          message.error('扩图任务失败')
+          message.error('扩图任务失败'+res.data)
           clearPolling()
         }
       }
@@ -130,7 +130,7 @@ const handleUpload = async () => {
       message.success('上传图片成功')
       closeModal()
     } else {
-      message.error('上传图片失败')
+      message.error('上传图片失败'+res.data)
     }
   } catch (e) {
     message.error('上传图片失败:{}', e.message)

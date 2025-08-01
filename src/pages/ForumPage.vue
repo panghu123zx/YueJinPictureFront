@@ -118,11 +118,7 @@ const fetchData = async () => {
 const doChangePages = (page, pageSize) => {
   searchParams.value.current = page
   searchParams.value.pageSize = pageSize
-  if(changeAll.value===0){
-    fetchForumData()
-  }else{
-    getFollow()
-  }
+  fetchData()
 }
 
 /**
@@ -146,7 +142,7 @@ const fetchForumData = async () => {
 const getAll=async ()=>{
   changeAll.value=0
   searchParams.value.current=1
-  await fetchForumData()
+  await fetchData()
 }
 
 /**
@@ -225,7 +221,7 @@ const doSearch = () => {
   color: white;
   font-size: 20px;
   font-weight: 600;
-  width: 100px;
+  width: 170px;
 }
 
 .forumUser {

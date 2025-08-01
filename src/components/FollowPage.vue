@@ -82,7 +82,7 @@ const fetchFollow = async () => {
     followList.value = res.data.records ?? []
     total.value = res.data.total ?? 0
   } else {
-    message.error('获取信息失败')
+    message.error('获取信息失败'+res.data)
   }
 }
 

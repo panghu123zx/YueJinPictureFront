@@ -57,7 +57,7 @@
 </template>
 <script setup lang='ts'>
 import { computed, h, ref } from 'vue'
-import { HomeOutlined, LogoutOutlined,UserOutlined ,SettingOutlined,PlusOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined, LogoutOutlined,UserOutlined ,SettingOutlined,PlusOutlined,FileAddOutlined ,MessageOutlined ,BellOutlined} from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginuserStore } from '../stores/loginuserStore'
@@ -78,6 +78,7 @@ const originItems = [
   {
     key: '/forum',
     label: '论坛',
+    icon: () => h(FileAddOutlined),
     title: '论坛'
   },
   {
@@ -87,11 +88,13 @@ const originItems = [
   {
     key: '/message',
     label: '消息',
+    icon:()=> h(BellOutlined),
     title: '消息'
   },
   {
     key: '/chat',
     label: '聊天',
+    icon:()=> h(MessageOutlined),
     title: '聊天'
   },
   {

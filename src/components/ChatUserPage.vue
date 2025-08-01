@@ -1,7 +1,7 @@
 <template>
   <a-list item-layout='horizontal' :data-source='listChat'>
     <template #renderItem='{ item }'>
-      <a-list-item @click='uploadItemClick(item)'>
+      <a-list-item @click='uploadItemClick(item)' style='padding-left: 0px'>
         <a-list-item-meta
           :description='item?.lastMessage + "  "+ dayjs(item?.lastMessageTime).format("HH:mm") ?? " " '
         >
@@ -125,5 +125,8 @@ const doDelete=async (item)=>{
 </script>
 <style scoped>
 #chat {
+}
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-list .ant-list-item){
+  padding-left: 0;
 }
 </style>

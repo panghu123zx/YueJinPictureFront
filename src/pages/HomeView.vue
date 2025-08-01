@@ -6,7 +6,7 @@
         <a-space style='margin-left: 35px;'>
           <a-button @click='getAll' :class='{"btn-back" : changeAll===0}'>发现</a-button>
           <a-button @click='getFollow' :class='{"btn-back" : changeAll===1}' >关注</a-button>
-          <a-button @click='getFour' :class='{"btn-back" : changeAll===2}' >4K图片</a-button>
+          <a-button @click='getFour' :class='{"btn-back" : changeAll===2}' >4K精选</a-button>
         </a-space>
         <div class='search-bar'>
           <a-input-search

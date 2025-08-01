@@ -214,7 +214,7 @@ const addlike = async (item) => {
     targetType: 0
   })
   if (res.code === 0) {
-    message.success('图片不错，点个赞')
+    message.success('图片不错，来个赞')
     item.likeCount++
   } else {
     message.error('点赞失败')

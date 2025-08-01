@@ -12,20 +12,20 @@
       </a-space>
     </a-flex>
     <a-row>
-      <a-col :span='8'>
-        <a-button class='btn-sty' @click='getComMessage'>
+      <a-col :span='8' >
+        <a-button class='btn-sty' @click='getComMessage' :class='{"btn-color" : changTags===0}' >
           <CommentOutlined style='font-size: 50px' />
           {{ messageStr }}评论
         </a-button>
       </a-col>
       <a-col :span='8'>
-        <a-button class='btn-sty' @click='getLikeMessage'>
+        <a-button class='btn-sty' @click='getLikeMessage' :class='{"btn-color" : changTags===1}'>
           <LikeOutlined style='font-size: 50px' />
           {{ messageStr }}点赞
         </a-button>
       </a-col>
       <a-col :span='8'>
-        <a-button class='btn-sty' @click='getShareMessage'>
+        <a-button class='btn-sty' @click='getShareMessage' :class='{"btn-color" : changTags===2}'>
           <ShareAltOutlined style='font-size: 50px' />
           {{ messageStr }}分享
         </a-button>
@@ -34,11 +34,11 @@
     <a-card :title='total + "条"+messageStr +"消息" '>
       <template #extra>
         <a-space>
-          <a-button size='small' @click='changePic'>
+          <a-button size='small' @click='changePic' :class='{"btn-color" : picOrFor===0}' >
             <PictureOutlined />
             图片
           </a-button>
-          <a-button size='small' @click='changeFor'>
+          <a-button size='small' @click='changeFor' :class='{"btn-color" : picOrFor===1}'>
             <FileImageOutlined />
             帖子
           </a-button>
@@ -118,6 +118,8 @@ const backOrMyMessage = ref<boolean>(true)
 const changTags = ref(0)
 // 内容的切换
 const messageStr = ref<string>('未读')
+//图片帖子的颜色切换 0-图片，1-帖子
+const picOrFor=ref<number>(0)
 
 /**
  * 搜索消息
@@ -269,6 +271,7 @@ const toDetail = async (item) => {
 
 //帖子数据
 const changeFor = () => {
+  picOrFor.value=1
   params.value = {
     ...params.value,
     targetType: TARGET_TYPE_ENUM.FORUM
@@ -285,6 +288,7 @@ const changeFor = () => {
 
 //图片数据
 const changePic = () => {
+  picOrFor.value=0
   params.value = {
     ...params.value,
     targetType: TARGET_TYPE_ENUM.PICTURE
@@ -358,5 +362,9 @@ onMounted(() => {
   align-items: center;
   display: flex;
   margin: 16px 0px 16px 13px;
+}
+.btn-color{
+  background-color: #8fe2df;
+  color: #524d4d;
 }
 </style>

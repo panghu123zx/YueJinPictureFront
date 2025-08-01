@@ -60,7 +60,6 @@
 </template>
 <script lang='ts' setup>
 import {
-  addForumFileUrlUsingPost,
   addForumFileUsingPost,
   addForumUsingPost, deleteForumFileUsingPost, getForumVoUsingGet,
   listForumCategoryUsingGet, updateForumUsingPost
@@ -71,7 +70,6 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { onBeforeUnmount, ref, shallowRef, onMounted, computed } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { createEditor } from '@wangeditor/editor'
-import Forum = API.Forum
 import ForumVO = API.ForumVO
 
 const router = useRouter()
@@ -129,7 +127,7 @@ const editorConfig = {
           position: htmlContent.length + 1,
           sort: fileSort.value
         }, {}, file)
-        if (res.code === 0) {
+        if (res.code === 0 &&res.data) {
           const id = res.data.id
           forumFileId.value.push(id)
           imageSortMap.value[res.data.picUrl] = fileSort.value  //将图片URL和排序值存储到映射中
@@ -138,7 +136,7 @@ const editorConfig = {
           forumFileUrl.value[res.data.picUrl] = id
           insertFn(res.data.picUrl)
         } else {
-          message.error('上传失败')
+          message.error('上传失败'+res.data)
         }
       }
     },
@@ -157,7 +155,7 @@ const editorConfig = {
         const res = await deleteForumFileUsingPost({
           id: fileId as any
         })
-        if (res.code === 0) {
+        if (res.code === 0 &&res.data) {
           //删除图片id，防止和帖子表关联
           const index = forumFileId.value.indexOf(fileId)
           if (index > -1) {
@@ -166,7 +164,7 @@ const editorConfig = {
           //删除url和sort的映射
           delete imageSortMap.value[url]
         } else {
-          message.error('删除失败')
+          message.error('删除失败'+res.data)
         }
       }
     }
@@ -183,8 +181,6 @@ onBeforeUnmount(() => {
 const handleCreated = (editor) => {
   editorRef.value = editor // 记录 editor 实例，重要！
   editor.handleTab = () => editor.insertText('    ')
-
-
 }
 
 //提交
@@ -223,7 +219,7 @@ const doSubmit = async () => {
     message.success('帖子创建成功')
     router.push('/forum')
   } else {
-    message.error('帖子创建失败')
+    message.error('帖子创建失败'+res.data)
   }
 }
 //获取分类
@@ -232,7 +228,7 @@ const getCategoryList = async () => {
   if (res.code === 0) {
     categoryList.value = res.data.categoryList
   } else {
-    message.error('获取分类列表失败')
+    message.error('获取分类列表失败'+res.data)
   }
 }
 //获取老数据
@@ -241,13 +237,24 @@ const getOldForum = async () => {
     const res = await getForumVoUsingGet({
       id: forumId.value as any
     })
-    if (res.code === 0) {
+    if (res.code === 0 && res.data) {
       //处理获取的图片数据
       const forumFile = res.data.forumFile
-      const processedContent = res.data.content.replace(/{img-(\d+)}/g, (match, sortIndex) => {
+      let processedContent = res.data.content
+        .replace(/{img-(\d+)}/g, (match, sortIndex) => {
         const image = forumFile.find(file => file.sort === Number(sortIndex))
-        return image ? `<img src='${image?.picUrl}' data-sort='${sortIndex}' style='max-height: 300px'/>` : '图片未找到'
+        return image ? `<img src='${image?.picUrl}' data-sort='${sortIndex}'/>` : `{img-${sortIndex}}`
       })
+      // 将HTML中的图片标记转换为纯文本标记
+      processedContent = processedContent
+        // 按换行分割内容（提交时用\n替代了</p>，所以段落间用\n分隔）
+        .split('\n')
+        // 过滤空行（避免生成空<p>标签）
+        .filter(segment => segment.trim() !== '')
+        // 每个段落用<p>包裹
+        .map(segment => `<p>${segment}</p>`)
+        // 拼接成完整HTML
+        .join('')
 
       forumData.value.title = res.data.title
       forumData.value.content = processedContent
@@ -279,5 +286,9 @@ onMounted(() => {
 #addforum {
   max-width: 1280px;
   margin: 0 auto;
+}
+
+:deep(.w-e-text-container [data-slate-editor] img){
+  max-height: 200px;
 }
 </style>
