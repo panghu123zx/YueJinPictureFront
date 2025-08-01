@@ -12,6 +12,9 @@
       <a-button type='primary' v-if='canUploadPicture' @click='router.push(`/addpicture?spaceId=${space?.id}`)'>
         + 创建图片
       </a-button>
+      <a-button type='primary' v-if='loginUserStore.loginUser.userRole==="admin"' @click='toAiCreate'>
+        + ai生图
+      </a-button>
       <a-button type='primary' v-if='canUploadPicture' ghost @click='doEditByBatch'>+ 批量编辑</a-button>
       <a-button type='primary' v-if='space?.spaceType===1 && canManageSpaceUser' :href='`/spaceUserManage/${id}`'>
         成员管理
@@ -44,6 +47,7 @@
 
   <EditPictureByBatch ref='editPictureByBatch' :pictureIdList='pictureIdList' :spaceId='props.id'
                       :onSuccess='onSuccess' />
+  <AiCreatePicture ref='aiCreatePicture'/>
 </template>
 
 <script lang='ts' setup>
@@ -64,6 +68,8 @@ import _default from 'ant-design-vue/es/vc-slick/inner-slider'
 import { SPACE_PERMISSION_ENUM } from '../constants/spaceuser'
 import { ExclamationCircleOutlined ,AreaChartOutlined} from '@ant-design/icons-vue'
 import UserSpaceInfo from '../components/UserSpaceInfo.vue'
+import { useLoginuserStore } from '../stores/loginuserStore'
+import AiCreatePicture from '../components/AiCreatePicture.vue'
 
 //获取动态参数
 const props = defineProps<{
@@ -77,6 +83,8 @@ const loading = ref(true)
 const space = ref<API.SpaceVO>()
 const pictureIdList = ref<number[]>([])
 const userSpaceInfo=ref()
+const loginUserStore = useLoginuserStore()
+const aiCreatePicture=ref()
 
 /**
  * 搜索条件
@@ -97,9 +105,8 @@ const doChangePages = (page, pageSize) => {
 //获取个人空间图片信息
 const fetchSpacePicture = async () => {
   loading.value = true
-
   const res = await getListPictureByVoUsingPost({
-    spaceId: props.id,
+    spaceId: props.id as number,
     ...searchParams
   })
   if (res.code === 0) {
@@ -116,7 +123,7 @@ const fetchSpacePicture = async () => {
  */
 const fetchSpace = async () => {
   const res = await getSpaceByIdVoUsingGet({
-    id: props.id
+    id: props.id as number
   })
   if (res.code === 0) {
     space.value = res.data
@@ -124,6 +131,12 @@ const fetchSpace = async () => {
     message.error('获取空间信息失败' + res.data)
   }
 
+}
+//ai生图
+const toAiCreate=()=>{
+  if(aiCreatePicture.value){
+    aiCreatePicture.value.openModal()
+  }
 }
 
 
@@ -142,7 +155,7 @@ onMounted(() => {
 //颜色搜索
 const onColorChange = async (color) => {
   const res = await searchPictureByColorUsingPost({
-    spaceId: props.id,
+    spaceId: props.id as number,
     picColor: color
   })
   if (res.code === 0) {
@@ -157,7 +170,7 @@ const editPictureByBatch = ref()
 // 批量编辑
 const doEditByBatch = () => {
   pictureList.value.forEach((item) => {
-    pictureIdList.value.push(item.id)
+    pictureIdList.value.push(item.id as any)
   })
   if (editPictureByBatch.value) {
     editPictureByBatch.value.openModal()

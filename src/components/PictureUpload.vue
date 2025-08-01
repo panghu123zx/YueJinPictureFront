@@ -6,7 +6,7 @@
       :before-upload='beforeUpload'
       :custom-request='handleUpload'
     >
-      <img v-if='picture?.url' :src='picture?.url' alt='avatar' style='max-height: 280px' />
+      <img v-if='picture?.url' :src='picture?.url' alt='avatar' style='max-height: 390px' />
       <div v-else>
         <loading-outlined v-if='loading'></loading-outlined>
         <plus-outlined v-else></plus-outlined>
@@ -51,7 +51,7 @@ const handleUpload = async ({ file }: any) => {
        props.onSuccess?.(res.data)
        message.success('上传图片成功')
      } else {
-       message.error('上传图片失败')
+       message.error('上传图片失败'+res.data)
      }
    } catch (e) {
      message.error('上传图片失败:{}', e.message)
@@ -66,11 +66,11 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
   if (!isJpgOrPng) {
     message.error('不支持上传图片的格式！仅支持jpg 或 png')
   }
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) {
-    message.error('不能上传超过2M的图片')
+  const isLt10M = file.size / 1024 / 1024 < 11
+  if (!isLt10M) {
+    message.error('不能上传超过10M的图片')
   }
-  return isJpgOrPng && isLt2M
+  return isJpgOrPng && isLt10M
 }
 </script>
 

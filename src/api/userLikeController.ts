@@ -7,7 +7,7 @@ export async function addUserLikeUsingPost(
   body: API.UserLikeAddDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseBoolean_>('/api/userlike/addUserLike', {
+  return request<API.BaseResponseLong_>('/api/userlike/addUserLike', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -32,24 +32,12 @@ export async function addUserShareUsingPost(
   })
 }
 
-/** getLikePic POST /api/userlike/get/likepic */
-export async function getLikePicUsingPost(body: API.PageRequest, options?: { [key: string]: any }) {
-  return request<API.BaseResponsePagePicture_>('/api/userlike/get/likepic', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  })
-}
-
-/** getSharePic POST /api/userlike/get/sharepic */
-export async function getSharePicUsingPost(
-  body: API.PageRequest,
+/** getLikePost POST /api/userlike/get/likeforum */
+export async function getLikePostUsingPost(
+  body: API.UserLikeQueryDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePagePicture_>('/api/userlike/get/sharepic', {
+  return request<API.BaseResponsePageForumVO_>('/api/userlike/get/likeforum', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -59,18 +47,47 @@ export async function getSharePicUsingPost(
   })
 }
 
-/** getMyLike GET /api/userlike/getMyLike */
-export async function getMyLikeUsingGet(options?: { [key: string]: any }) {
-  return request<API.BaseResponseUserLikeVO_>('/api/userlike/getMyLike', {
-    method: 'GET',
+/** getLikePic POST /api/userlike/get/likepic */
+export async function getLikePicUsingPost(
+  body: API.UserLikeQueryDto,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePagePictureVO_>('/api/userlike/get/likepic', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   })
 }
 
-/** getMyShare GET /api/userlike/getMyShare */
-export async function getMyShareUsingGet(options?: { [key: string]: any }) {
+/** getMyLike POST /api/userlike/getMyLike */
+export async function getMyLikeUsingPost(
+  body: API.UserLikeAddDto,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseUserLikeVO_>('/api/userlike/getMyLike', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** getMyShare POST /api/userlike/getMyShare */
+export async function getMyShareUsingPost(
+  body: API.UserLikeAddDto,
+  options?: { [key: string]: any }
+) {
   return request<API.BaseResponseUserLikeVO_>('/api/userlike/getMyShare', {
-    method: 'GET',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   })
 }
@@ -80,7 +97,7 @@ export async function unUserLikeUsingPost(
   body: API.UserLikeAddDto,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseBoolean_>('/api/userlike/unUserLike', {
+  return request<API.BaseResponseLong_>('/api/userlike/unUserLike', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

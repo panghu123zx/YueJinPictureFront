@@ -1,11 +1,67 @@
 declare namespace API {
+  type addAudioFileUsingPOSTParams = {
+    fileType?: number
+    introduction?: string
+    title?: string
+  }
+
   type AddCommentDto = {
     content?: string
     fromId?: number
-    fromName?: string
     parentId?: number
     targetId?: number
     targetType?: number
+    targetUserId?: number
+  }
+
+  type AddFollowDto = {
+    followerId?: number
+    followerIdName?: string
+    status?: number
+    userId?: number
+    userIdName?: string
+  }
+
+  type addForumFileUsingPOSTParams = {
+    fileUrl?: string
+    forumId?: number
+    id?: number
+    position?: number
+    sort?: number
+    type?: number
+  }
+
+  type AudioFileQueryDto = {
+    current?: number
+    fileType?: number
+    id?: number
+    introduction?: string
+    pageSize?: number
+    size?: number
+    sortField?: string
+    sortOrder?: string
+    title?: string
+    userId?: number
+  }
+
+  type AudioFileUpdateDto = {
+    id?: number
+    introduction?: string
+    title?: string
+  }
+
+  type AudioFileVO = {
+    createTime?: string
+    fileType?: number
+    fileUrl?: string
+    id?: number
+    introduction?: string
+    md5?: string
+    size?: number
+    title?: string
+    updateTime?: string
+    userId?: number
+    userVO?: UserVO
   }
 
   type BaseResponseBoolean_ = {
@@ -17,6 +73,30 @@ declare namespace API {
   type BaseResponseCreateOutPaintingTaskVo_ = {
     code?: number
     data?: CreateOutPaintingTaskVo
+    message?: string
+  }
+
+  type BaseResponseFollow_ = {
+    code?: number
+    data?: Follow
+    message?: string
+  }
+
+  type BaseResponseForum_ = {
+    code?: number
+    data?: Forum
+    message?: string
+  }
+
+  type BaseResponseForumFile_ = {
+    code?: number
+    data?: ForumFile
+    message?: string
+  }
+
+  type BaseResponseForumVO_ = {
+    code?: number
+    data?: ForumVO
     message?: string
   }
 
@@ -35,6 +115,12 @@ declare namespace API {
   type BaseResponseListCommentVO_ = {
     code?: number
     data?: CommentVO[]
+    message?: string
+  }
+
+  type BaseResponseListForumFile_ = {
+    code?: number
+    data?: ForumFile[]
     message?: string
   }
 
@@ -110,9 +196,45 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponsePageAudioFileVO_ = {
+    code?: number
+    data?: PageAudioFileVO_
+    message?: string
+  }
+
+  type BaseResponsePageChatPromptVO_ = {
+    code?: number
+    data?: PageChatPromptVO_
+    message?: string
+  }
+
   type BaseResponsePageCommentVO_ = {
     code?: number
     data?: PageCommentVO_
+    message?: string
+  }
+
+  type BaseResponsePageFollowVO_ = {
+    code?: number
+    data?: PageFollowVO_
+    message?: string
+  }
+
+  type BaseResponsePageForum_ = {
+    code?: number
+    data?: PageForum_
+    message?: string
+  }
+
+  type BaseResponsePageForumVO_ = {
+    code?: number
+    data?: PageForumVO_
+    message?: string
+  }
+
+  type BaseResponsePageLikeMessageVO_ = {
+    code?: number
+    data?: PageLikeMessageVO_
     message?: string
   }
 
@@ -212,30 +334,102 @@ declare namespace API {
     message?: string
   }
 
-  type CommentQueryDto = {
+  type ChatPromptAddDto = {
+    chatType?: number
+    lastMessage?: string
+    lastMessageTime?: string
+    receiveTitle?: string
+    targetId?: number
+    title?: string
+    unreadCount?: number
+    userId?: number
+  }
+
+  type ChatPromptQueryDto = {
+    chatType?: number
     current?: number
+    id?: number
+    isQuery?: number
+    lastMessage?: string
+    lastMessageTime?: string
     pageSize?: number
+    receiveTitle?: string
+    sortField?: string
+    sortOrder?: string
+    targetId?: number
+    title?: string
+    unreadCount?: number
+    userId?: number
+  }
+
+  type ChatPromptUpdateDto = {
+    chatType?: number
+    id?: number
+    lastMessage?: string
+    lastMessageTime?: string
+    receiveTitle?: string
+    targetId?: number
+    title?: string
+    unreadCount?: number
+    userId?: number
+  }
+
+  type ChatPromptVO = {
+    chatType?: number
+    createTime?: string
+    id?: number
+    isReceive?: number
+    lastMessage?: string
+    lastMessageTime?: string
+    receiveTitle?: string
+    targetId?: number
+    targetUserVO?: UserVO
+    title?: string
+    unreadCount?: number
+    updateTime?: string
+    userId?: number
+  }
+
+  type CommentQueryDto = {
+    content?: string
+    current?: number
+    fromId?: number
+    id?: number
+    isCommentMy?: number
+    isRead?: number
+    likeCount?: number
+    pageSize?: number
+    parentId?: number
     sortField?: string
     sortOrder?: string
     targetId?: number
     targetType?: number
+    targetUserId?: number
+    userId?: number
+  }
+
+  type CommentReadDto = {
+    id?: number
+    isRead?: number
   }
 
   type CommentVO = {
     commentVOChildList?: CommentVO[]
     content?: string
     createTime?: string
+    forumVO?: ForumVO
     fromId?: number
-    fromName?: string
     id?: number
+    isRead?: number
     likeCount?: number
     parentId?: number
+    pictureVO?: PictureVO
     targetId?: number
     targetType?: number
+    targetUserId?: number
     updateTime?: string
-    userAvatar?: string
     userId?: number
-    userName?: string
+    userVO?: UserVO
   }
 
   type CreateOutPaintingTaskVo = {
@@ -257,6 +451,166 @@ declare namespace API {
   type downloadFileUsingGETParams = {
     /** filePath */
     filePath?: string
+  }
+
+  type Follow = {
+    createTime?: string
+    followState?: number
+    followerId?: number
+    id?: number
+    isDeleted?: number
+    isMutual?: number
+    userId?: number
+  }
+
+  type FollowQueryDto = {
+    current?: number
+    followState?: number
+    followerId?: number
+    id?: number
+    isMutual?: number
+    pageSize?: number
+    queryStatus?: number
+    sortField?: string
+    sortOrder?: string
+    userId?: number
+  }
+
+  type FollowVO = {
+    createTime?: string
+    followState?: number
+    followerId?: number
+    followerVO?: UserVO
+    id?: number
+    isMutual?: number
+    userId?: number
+    userVO?: UserVO
+  }
+
+  type Forum = {
+    category?: string
+    commentCount?: number
+    content?: string
+    createTime?: string
+    id?: number
+    isDelete?: number
+    likeCount?: number
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewerId?: number
+    shareCount?: number
+    title?: string
+    updateTime?: string
+    userId?: number
+    viewCount?: number
+  }
+
+  type ForumAddDto = {
+    category?: string
+    content?: string
+    listForumFileId?: number[]
+    title?: string
+  }
+
+  type ForumFile = {
+    createTime?: string
+    forumId?: number
+    id?: number
+    isDelete?: number
+    picUrl?: string
+    position?: number
+    size?: number
+    sort?: number
+    thumbnailUrl?: string
+    type?: number
+    updateTime?: string
+  }
+
+  type ForumFileAddDto = {
+    fileUrl?: string
+    forumId?: number
+    id?: number
+    position?: number
+    sort?: number
+    type?: number
+  }
+
+  type ForumFileDeleteDto = {
+    ids?: number[]
+  }
+
+  type ForumFileQueryDto = {
+    forumId?: number
+    id?: number
+    sort?: number
+    type?: number
+  }
+
+  type ForumQueryDto = {
+    category?: string
+    commentCount?: number
+    content?: string
+    current?: number
+    id?: number
+    likeCount?: number
+    pageSize?: number
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewerId?: number
+    shareCount?: number
+    sortField?: string
+    sortOrder?: string
+    title?: string
+    userId?: number
+    viewCount?: number
+  }
+
+  type ForumReviewDto = {
+    id?: number
+    reviewMessage?: string
+    reviewStatus?: number
+  }
+
+  type ForumUpdateDto = {
+    category?: string
+    content?: string
+    id?: number
+    listForumFileId?: number[]
+    title?: string
+  }
+
+  type ForumVO = {
+    category?: string
+    commentCount?: number
+    content?: string
+    createTime?: string
+    forumFile?: ForumFile[]
+    id?: number
+    likeCount?: number
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewerId?: number
+    shareCount?: number
+    title?: string
+    updateTime?: string
+    userId?: number
+    userVO?: UserVO
+    viewCount?: number
+  }
+
+  type getFollowCountByUserUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
+  type getForumUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
+  type getForumVOUsingGETParams = {
+    /** id */
+    id?: number
   }
 
   type getOutPaintingTaskUsingGETParams = {
@@ -309,6 +663,46 @@ declare namespace API {
     likeCount?: number
   }
 
+  type LikeMessageAddDto = {
+    actionType?: number
+    receiverId?: number
+    targetId?: number
+    targetType?: number
+  }
+
+  type LikeMessageQueryDto = {
+    actionType?: number
+    current?: number
+    id?: number
+    isRead?: number
+    pageSize?: number
+    receiverId?: number
+    sendId?: number
+    sortField?: string
+    sortOrder?: string
+    targetId?: number
+    targetType?: number
+  }
+
+  type LikeMessageReadDto = {
+    id?: number
+    isRead?: number
+  }
+
+  type LikeMessageVO = {
+    actionType?: number
+    createTime?: string
+    forumVO?: ForumVO
+    id?: number
+    isRead?: number
+    pictureVO?: PictureVO
+    receiverId?: number
+    sendId?: number
+    targetId?: number
+    targetType?: number
+    userVO?: UserVO
+  }
+
   type LoginUserVo = {
     createTime?: string
     editTime?: string
@@ -337,10 +731,58 @@ declare namespace API {
     taskStatus?: string
   }
 
+  type PageAudioFileVO_ = {
+    current?: number
+    pages?: number
+    records?: AudioFileVO[]
+    size?: number
+    total?: number
+  }
+
+  type PageChatPromptVO_ = {
+    current?: number
+    pages?: number
+    records?: ChatPromptVO[]
+    size?: number
+    total?: number
+  }
+
   type PageCommentVO_ = {
     current?: number
     pages?: number
     records?: CommentVO[]
+    size?: number
+    total?: number
+  }
+
+  type PageFollowVO_ = {
+    current?: number
+    pages?: number
+    records?: FollowVO[]
+    size?: number
+    total?: number
+  }
+
+  type PageForum_ = {
+    current?: number
+    pages?: number
+    records?: Forum[]
+    size?: number
+    total?: number
+  }
+
+  type PageForumVO_ = {
+    current?: number
+    pages?: number
+    records?: ForumVO[]
+    size?: number
+    total?: number
+  }
+
+  type PageLikeMessageVO_ = {
+    current?: number
+    pages?: number
+    records?: LikeMessageVO[]
     size?: number
     total?: number
   }
@@ -359,13 +801,6 @@ declare namespace API {
     records?: PictureVO[]
     size?: number
     total?: number
-  }
-
-  type PageRequest = {
-    current?: number
-    pageSize?: number
-    sortField?: string
-    sortOrder?: string
   }
 
   type PageSpace_ = {
@@ -436,6 +871,11 @@ declare namespace API {
     viewCount?: number
   }
 
+  type PictureAiDto = {
+    content?: string
+    name?: string
+  }
+
   type PictureEditByBatchDto = {
     category?: string
     nameRule?: string
@@ -461,6 +901,7 @@ declare namespace API {
     homeShow?: string
     id?: number
     introduction?: string
+    is4K?: number
     likeCount?: number
     name?: string
     pageSize?: number
@@ -748,6 +1189,7 @@ declare namespace API {
   type User = {
     createTime?: string
     editTime?: string
+    email?: string
     id?: number
     isDelete?: number
     updateTime?: string
@@ -776,9 +1218,12 @@ declare namespace API {
 
   type UserEditDto = {
     id?: number
-    userAvatar?: string
     userName?: string
     userProfile?: string
+  }
+
+  type UserEmailDto = {
+    email?: string
   }
 
   type UserLikeAddDto = {
@@ -787,11 +1232,23 @@ declare namespace API {
     targetType?: number
   }
 
+  type UserLikeQueryDto = {
+    current?: number
+    likeShare?: number
+    pageSize?: number
+    sortField?: string
+    sortOrder?: string
+    targetId?: number
+    targetType?: number
+  }
+
   type UserLikeVO = {
     createTime?: string
     id?: number
-    likePic?: PictureVO[]
+    likePic?: string[]
+    likePicVO?: PictureVO[]
     likePost?: string[]
+    likePostVO?: ForumVO[]
     likeShare?: number
     targetType?: number
     userAvatar?: string
@@ -806,6 +1263,7 @@ declare namespace API {
 
   type UserQueryDto = {
     current?: number
+    email?: string
     id?: number
     pageSize?: number
     sortField?: string
@@ -818,7 +1276,8 @@ declare namespace API {
 
   type UserRegisterDto = {
     checkPassword?: string
-    userAccount?: string
+    code?: string
+    email?: string
     userPassword?: string
   }
 
@@ -832,6 +1291,7 @@ declare namespace API {
 
   type UserVO = {
     createTime?: string
+    email?: string
     id?: number
     userAccount?: string
     userAvatar?: string

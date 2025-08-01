@@ -43,7 +43,6 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { deleteUserUsingPost, getListUserByPageUsingPost, updateUserUsingPost } from '../../api/userController'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
-import Api from '@vitejs/plugin-vue'
 import { editSpaceUserUsingPost } from '../../api/spaceUserController'
 
 
@@ -114,11 +113,11 @@ const fetchUserList = async () => {
   const res = await getListUserByPageUsingPost({
     ...searchParams
   })
-  if (res.code === 0) {
+  if (res.code === 0&&res.data) {
     dataList.value = res.data.records ?? []
     total.value = res.data.total ?? 0
   } else {
-    message.error('获取数据失败' + res.message)
+    message.error('获取数据失败' + res.data)
   }
 }
 

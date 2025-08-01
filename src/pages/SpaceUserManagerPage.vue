@@ -42,7 +42,7 @@ import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue'
 import { computed, defineProps, onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
-import Api from '@vitejs/plugin-vue'
+
 import {
   addSpaceUserUsingPost,
   deleteSpaceUserUsingPost,

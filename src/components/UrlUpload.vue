@@ -4,7 +4,7 @@
       <a-input v-model:value='fileUrl' style='width: calc(100% - 120px) ;max-width: 500px' placeholder='请输入图片 URL' />
       <a-button type='primary' :loading='loading' @click='handleUpload' style='width: 120px'>提交</a-button>
     </a-input-group>
-    <img v-if='picture?.url' :src='picture?.url' alt='avatar' style='margin-left: 20%;' />
+    <img v-if='picture?.url' :src='picture?.url' alt='avatar' style='width: 500px' />
   </div>
 
 </template>
@@ -44,7 +44,7 @@ const handleUpload = async () => {
       props.onSuccess?.(res.data)
       message.success('上传图片成功')
     } else {
-      message.error('上传图片失败')
+      message.error('上传图片失败'+res.data)
     }
   } catch (e) {
     message.error('上传图片失败:{}', e.message)

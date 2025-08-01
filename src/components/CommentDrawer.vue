@@ -11,8 +11,8 @@
       >
         <template #renderItem='{ item }'>
           <a-list-item>
-            <a-comment :author="item?.userName ?? '无名'"
-                       :avatar="item?.userAvatar  ">
+            <a-comment :author="item?.userVO.userName ?? '无名'"
+                       :avatar="item?.userVO.userAvatar  ">
               <template #actions>
                 <a-space>
                   <LikeOutlined @click='doAddLike(item)' v-if='likeComment.indexOf(item.id)===-1' />
@@ -41,8 +41,8 @@
               <a-comment
                 v-for='childItem in item.commentVOChildList'
                 :key='childItem.id'
-                :author="`${childItem.userName ?? '无名'} ▶ ${childItem.fromName ?? '无名'}`"
-                :avatar="childItem?.userAvatar ">
+                :author="`${childItem.userVO?.userName ?? '无名'} ▶ ${item?.userVO.userName ?? '无名'}`"
+                :avatar="childItem.userVO?.userAvatar ">
                 <template #actions>
                   <a-space>
                     <LikeOutlined @click='doAddLike(childItem)' v-if='likeComment.indexOf(childItem.id)===-1' />
@@ -93,11 +93,14 @@ import {
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { LikeFilled, LikeOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { getLoginUserUsingGet } from '../api/userController'
 
 
 
 interface Props {
-  id: number | string
+  id: number | string,
+  targetType: number,
+  targetUserId: number | string
 }
 
 const props = defineProps<Props>()
@@ -115,6 +118,8 @@ const likeComment = ref([])
 //添加评论时的参数值
 const params = ref<API.AddCommentDto>()
 
+const loginUser=ref<API.UserVO>()
+
 /**
  * 回复评论
  */
@@ -122,9 +127,9 @@ const isShow = ref(false)
 const replyComment = async (item) => {
   isShow.value = true
   params.value = {
-    fromName: item.userName,
     fromId: item.userId,
-    parentId: item.id
+    parentId: item.id,
+    targetUserId: props.targetUserId
   }
 }
 
@@ -132,7 +137,6 @@ const replyChildComment=(childItem)=>{
   isShow.value=true
   params.value={
     parentId: childItem.parentId,
-    fromName: childItem.userName,
     fromId: childItem.userId,
   }
 }
@@ -152,11 +156,11 @@ const deleteComment = async (item) => {
   const res = await deleteCommentUsingPost({
     id: item.id
   })
-  if (res.code === 0) {
+  if (res.code === 0&&res.data) {
     message.success('删除成功')
     fetchCommentData()
   } else {
-    message.error('删除失败')
+    message.error('删除失败'+res.data)
   }
 }
 
@@ -167,12 +171,12 @@ const doAddLike = async (item) => {
   const res = await likeCommentUsingPost({
     id: item.id
   })
-  if (res.code === 0) {
+  if (res.code === 0&&res.data) {
     message.success('点赞成功')
     item.likeCount++
     likeComment.value.push(item.id)
   } else {
-    message.error('点赞失败' + res.message)
+    message.error('点赞失败' + res.data)
   }
 }
 
@@ -183,12 +187,12 @@ const doAddLike = async (item) => {
 const fetchCommentData = async () => {
   const res = await getTargetCommentUsingPost({
     targetId: props.id as number,
-    targetType: 0
+    targetType: props.targetType
   })
   if (res.code === 0 && res.data) {
     commentList.value = res.data
   } else {
-    message.error('获取评论失败' + res.message)
+    message.error('获取评论失败' + res.data)
   }
 }
 
@@ -200,19 +204,22 @@ const doAddComment = async () => {
     message.error('评论内容不能为空')
     return
   }
+  if(!loginUser.value?.id){
+    await fetchUser();
+  }
 
 
   params.value.targetId = props.id as number
-  params.value.targetType =0
+  params.value.targetType =props.targetType
   params.value.content = content.value
 
   const res = await addCommentUsingPost({
     ...params.value
   })
-  if (res.code === 0) {
+  if (res.code === 0 && res.data) {
     message.success('评论成功')
   } else {
-    message.error('评论失败' + res.message)
+    message.error('评论失败' + res.data)
   }
   content.value = ''
   isShow.value = false
@@ -220,6 +227,12 @@ const doAddComment = async () => {
   fetchCommentData()
 }
 
+const fetchUser=async ()=>{
+  const res=await getLoginUserUsingGet()
+  if(res.code===0 && res.data){
+    loginUser.value=res.data
+  }
+}
 
 watch(() => props.id
   , (newPictureId) => {

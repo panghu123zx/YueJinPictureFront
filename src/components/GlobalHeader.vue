@@ -15,18 +15,21 @@
       <a-col flex='170px'>
         <a-dropdown>
           <div class='login-status'>
-            <div v-if='useLoginuser.loginUser.id'>
+            <div v-if='useLoginuser.loginUser?.id'>
               <a-space >
                 <a-avatar :src='useLoginuser.loginUser.userAvatar ' />
                 {{ useLoginuser.loginUser.userName ?? '无名1' }}
               </a-space>
             </div>
             <div v-else>
-              <a-button type='primary' href='/user/login'>登入</a-button>
+              <a-space>
+                <a-button type='primary' href='/user/login'>登入</a-button>
+                <a-button type='primary' href='/user/register'>注册</a-button>
+              </a-space>
             </div>
           </div>
           <template #overlay>
-            <a-menu>
+            <a-menu v-if='useLoginuser?.loginUser?.id'>
               <a-menu-item>
                 <router-link to='/my'>
                   <SettingOutlined />
@@ -49,20 +52,21 @@
 
       </a-col>
     </a-row>
-
+<AllUploadPage  ref='allUploadPage'/>
   </div>
 </template>
 <script setup lang='ts'>
 import { computed, h, ref } from 'vue'
-import { HomeOutlined, LogoutOutlined,UserOutlined ,SettingOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined, LogoutOutlined,UserOutlined ,SettingOutlined,PlusOutlined,FileAddOutlined ,MessageOutlined ,BellOutlined} from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginuserStore } from '../stores/loginuserStore'
 import { userLogoutUsingGet } from '../api/userController'
-
+import AllUploadPage from './AllUploadPage.vue'
 
 const loginUserStore = useLoginuserStore()
 const current = ref<string[]>([])
+const allUploadPage=ref()
 
 const originItems = [
   {
@@ -72,14 +76,31 @@ const originItems = [
     title: '主页'
   },
   {
+    key: '/forum',
+    label: '论坛',
+    icon: () => h(FileAddOutlined),
+    title: '论坛'
+  },
+  {
+    key: 'model',
+    icon: () => h(PlusOutlined ,{ style: 'color: white;font-size: large;justify-content: center;' }),
+  },
+  {
+    key: '/message',
+    label: '消息',
+    icon:()=> h(BellOutlined),
+    title: '消息'
+  },
+  {
+    key: '/chat',
+    label: '聊天',
+    icon:()=> h(MessageOutlined),
+    title: '聊天'
+  },
+  {
     key: '/admin/usermanager',
     label: '用户管理',
     title: '用户管理'
-  },
-  {
-    key: '/addpicture',
-    label: '创建图片',
-    title: '创建图片'
   },
   {
     key: '/admin/picturemanager',
@@ -92,23 +113,24 @@ const originItems = [
     title: '空间管理'
   },
   {
-    key: '/likesharepic',
-    label: '图片点赞',
-    title: '图片点赞'
+    key: '/admin/forummanager',
+    label: '论坛管理',
+    title: '论坛管理'
   },
-  {
-    key: 'other',
-    label: h('a',{href: 'http://101.37.170.234'},'胖虎OJ'),
-    title: '胖虎OJ'
-  }
-
 ]
 
 const router = useRouter()
 const doMenu = ({ key }: { key: String }) => {
-  router.push({
-    path: key
-  })
+  if(key==='model'){
+    if(allUploadPage){
+      allUploadPage.value.openModal()
+    }
+  }else{
+    router.push({
+      path: key
+    })
+  }
+
 }
 /**
  * 得到显示的导航栏值
@@ -122,7 +144,6 @@ router.afterEach(to => {
  */
 const useLoginuser = useLoginuserStore()
 useLoginuser.fetchLoginUser()
-
 /**
  * 退出登入
  */
@@ -169,8 +190,15 @@ const items = computed<MenuProps['items']>(() => filterItems(originItems))
   margin-left: 12px;
 }
 
-
-
-.login-status {
+:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
+.ant-menu-item.ant-menu-item-only-child >.anticon,
+:where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
+.ant-menu-submenu-title.ant-menu-item-only-child >.anticon, :where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
+.ant-menu-item.ant-menu-item-only-child
+>.ant-menu-item-icon, :where(.css-dev-only-do-not-override-1p3hq3p).ant-menu .ant-menu-submenu-title.ant-menu-item-only-child >.ant-menu-item-icon){
+  width: 44px;
+  height: 44px;
+  background-color: #7ed321;
+  border-radius: 52%;
 }
 </style>

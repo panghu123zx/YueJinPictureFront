@@ -1,65 +1,38 @@
 <template>
   <a-row :gutter='[16,16]'>
     <a-col :span='15'>
-      <a-card >
+      <a-card>
         <a-space>
           <a-avatar :size='100' :src='user?.userAvatar ' />
           <a-typography>
-            <a-typography-paragraph style='margin-bottom: 1px;'>用户名: {{ user?.userName }}</a-typography-paragraph>
-            <a-typography-paragraph style='margin-bottom: 1px; '>账号: {{ user?.userAccount }}</a-typography-paragraph>
-            <a-typography-paragraph style='margin-bottom: 1px;color: #7c6b6b'>Id: {{ user?.id }}
-            </a-typography-paragraph>
+            <a-typography-paragraph style='margin-bottom: 1px;'>{{ user?.userName }}</a-typography-paragraph>
+            <a-typography-paragraph style='margin-bottom: 1px; '>账号：{{ user?.userAccount }}</a-typography-paragraph>
             <a-typography-paragraph style='margin-bottom: 1px;color: #7c6b6b'>简介: {{ user?.userProfile }}
+              <a-typography-paragraph style='margin-bottom: 1px;color: #7c6b6b'>
+                <a-space>
+                  <span @click='getMyFollow'>{{followerCount}} 关注</span>
+                  <span @click='getFollowMy'>{{fansCount}} 粉丝</span>
+                </a-space>
+              </a-typography-paragraph>
             </a-typography-paragraph>
           </a-typography>
         </a-space>
       </a-card>
-
-      <a-card title='我发布的评论' style='margin-top: 16px;'>
-        <a-list
-          :data-source="commentList"
-          :pagination='pagination'
-        >
-          <template #renderItem="{ item }">
-            <a-list-item>
-              <a-comment :author="item.userName ?? '无名'" :avatar="item.userAvatar ">
-                <template #actions>
-                  <a-space>
-                    <LikeFilled />
-                    {{ item.likeCount }}
-                  </a-space>
-                  <a-space style='margin-left: 16px;' @click='deleteComment(item)'>
-                    <DeleteOutlined />
-                    <span style='font-size: 11px;'>删除</span>
-                  </a-space>
-                </template>
-
-                <template #content>
-                  <p @click='router.push(`/picture/${item.targetId}`)'>
-                    {{ item.content ?? '评论内容为空'}}
-                  </p>
-                </template>
-
-                <template #datetime>
-                  <a-tooltip>
-                    <span>{{ dayjs(item.createTime).format('YYYY-MM-DD') }}</span>
-                  </a-tooltip>
-                </template>
-              </a-comment>
-            </a-list-item>
-          </template>
-        </a-list>
+      <a-card title='空间使用分析' style='margin-top: 16px;'>
+        <SpaceUserAnalyzePage v-if='space' :spaceId='space?.id' :queryAll='false' :queryPublic='false' />
+        <div v-else>
+          <a-spin />
+        </div>
       </a-card>
     </a-col>
     <a-col :span='9'>
       <a-card>
         <a-collapse expandIconPosition='end'>
-          <a-collapse-panel header='编辑资料'  @click='changeUserInfo'/>
-          <a-collapse-panel  header='修改密码' @click='changeUserPwd'/>
-          <a-collapse-panel  header='评论我的评论历史' @click='getCommentMy'/>
-          <a-collapse-panel  header='我喜欢的图片' @click='router.push("/likesharepic")'/>
-          <a-collapse-panel  header='关于图库' @click='toMyGithub'/>
-          <a-collapse-panel  header='退出登入' @click='doLogout'/>
+          <a-collapse-panel header='编辑资料' @click='changeUserInfo' />
+          <a-collapse-panel header='修改密码' @click='changeUserPwd' />
+          <a-collapse-panel header='我的点赞' @click='router.push("/likesharepic")' />
+          <a-collapse-panel header='关于图库' @click='toMyGithub' />
+          <a-collapse-panel header='退出登入' @click='doLogout' />
         </a-collapse>
       </a-card>
       <a-card style='text-align: center; margin-top: 16px;background-color: #f1f1f1'>
@@ -67,42 +40,39 @@
       </a-card>
     </a-col>
   </a-row>
-
- <CommentMyHistory ref='commentMyHistory'/>
-  <EditUserPwd ref='editUserPwd' :id='user?.id'/>
-  <EditUserInfo ref='editUserInfo' :id='user?.id' :userName='user?.userName' :userAvatar='user?.userAvatar' :userProfile='user?.userProfile' :onSuccess='fetchData'/>
+  <EditUserPwd ref='editUserPwd' :id='user?.id' />
+  <EditUserInfo ref='editUserInfo' :id='user?.id' :userName='user?.userName' :userAvatar='user?.userAvatar'
+                :userProfile='user?.userProfile' :onSuccess='fetchData' />
+  <FollowPage ref='followPage' :id='user?.id' :follow='follow'/>
 </template>
 
 <script lang='ts' setup>
 import { useLoginuserStore } from '../stores/loginuserStore'
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { getLoginUserUsingGet, userLogoutUsingGet } from '../api/userController'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import EditUserPwd from '../components/EditUserPwd.vue'
 import EditUserInfo from '../components/EditUserInfo.vue'
-import { deleteCommentUsingPost, getMyCommentHistoryUsingPost } from '../api/commentController'
+import FollowPage from '../components/FollowPage.vue'
 import dayjs from 'dayjs'
-import { LikeFilled,DeleteOutlined } from '@ant-design/icons-vue'
-import CommentMyHistory from '../components/CommentMyHistory.vue'
+import { getFollowCountUsingGet } from '../api/followController'
+import { getListSpaceByVoUsingPost } from '../api/spaceController'
+import SpaceUserAnalyzePage from '../components/spaceAnalyze/SpaceUserAnalyzePage.vue'
 
-const router=useRouter()
-const editUserPwd=ref()
-const editUserInfo=ref()
 
+const router = useRouter()
+const editUserPwd = ref()
+const editUserInfo = ref()
+const followPage = ref()
 const loginUserStore = useLoginuserStore()
-
-const commentList=ref<API.CommentVO[]>([])
-
 const user = ref<API.UserVO>()
-const commentMyHistory=ref()
+const space=ref<API.SpaceVO>()
+//粉丝数
+const fansCount = ref()
+//关注数
+const followerCount = ref()
 
-//分页参数
-const pagination = {
-  onChange: (page: number) => {
-  },
-  pageSize: 3,
-};
 
 /**
  * 获取个人信息
@@ -117,36 +87,39 @@ const fetchData = async () => {
 }
 
 /**
- * 获取我的评论
+ * 获取关注数和粉丝数
  */
-const fetchMyComment=async ()=>{
-  const res=await getMyCommentHistoryUsingPost({})
-  if(res.code===0 && res.data){
-    commentList.value=res.data.records ?? []
+const fetchFollowCount = async () => {
+  const res = await getFollowCountUsingGet()
+  if (res.code === 0 && res.data) {
+    fansCount.value = res.data.followerId
+    followerCount.value = res.data.userId
   }else{
-    message.error('获取评论历史失败'+res.data)
+    message.error('获取关注信息失败' )
   }
 }
 
-
-/**
- * 删除评论
- */
-const deleteComment=async (item)=>{
-  const res=await deleteCommentUsingPost({
-    id: item.id
+//进入个人空间界面的权限校验
+const checkUserSpace = async () => {
+  //找到当前登入用户的个人空间
+  const res = await getListSpaceByVoUsingPost({
+    userId: loginUserStore.loginUser?.id,
+    current: 1,
+    pageSize: 1
   })
-  if(res.code===0){
-    message.success('删除成功')
-    fetchMyComment()
-  }else{
-    message.error('删除失败')
+  if (res.code == 0) {
+    //当前用户没有创建个人空间，跳转到新建个人空间
+    if (res.data.records.length === 0) {
+      message.warn("创建个人空间才能查看信息")
+    } else {
+      //创建了就取第一个
+      space.value = res.data.records[0]
+    }
+  } else {
+    message.error('获取个人空间信息失败：' + res.data)
   }
 }
 
-/**
- * 获取评论我的历史
- */
 
 /**
  * 退出登入
@@ -165,35 +138,56 @@ const doLogout = async () => {
 
 onMounted(() => {
   fetchData()
-  fetchMyComment()
+  fetchFollowCount()
+  checkUserSpace()
 })
-
-const changeUserPwd=()=>{
-  if(editUserPwd.value){
+//修改密码
+const changeUserPwd = () => {
+  if (editUserPwd.value) {
     editUserPwd.value.openModal()
   }
 }
 
-const changeUserInfo=()=>{
-  if(editUserInfo.value){
+//编辑信息
+const changeUserInfo = () => {
+  if (editUserInfo.value) {
     editUserInfo.value.openModal()
   }
 }
 
-const getCommentMy=()=>{
-  if(commentMyHistory.value){
-    commentMyHistory.value.openModal()
-    commentMyHistory.value.fetchCommentMy()
-  }
+//关于自己
+const toMyGithub = () => {
+  window.open('https://github.com/panghu123zx')
 }
 
-const toMyGithub=()=>{
-  window.open("https://github.com/panghu123zx")
+//查询我关注的人
+//0-查询我关注的   1-查询关注我的
+const follow=ref(0)
+const getMyFollow = () => {
+  follow.value=0
+  nextTick(()=>{
+    if (followPage.value) {
+      followPage.value.openModal()
+      followPage.value.fetchFollow()
+    }
+  })
+}
+
+//查询关注我的人
+const getFollowMy=()=>{
+  follow.value=1
+  nextTick(()=>{
+    if (followPage.value) {
+      followPage.value.openModal()
+      followPage.value.fetchFollow()
+    }
+  })
+
 }
 </script>
 
 <style scoped>
-:deep(.ant-collapse-content-active){
+:deep(.ant-collapse-content-active) {
   max-height: 1px;
 }
 </style>

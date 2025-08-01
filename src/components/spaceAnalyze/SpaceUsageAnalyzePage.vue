@@ -60,6 +60,8 @@ onMounted(() => {
 
 <style scoped>
 #SpaceAnalyzePage {
+  height: 100%;
+  background-color: white;
 }
 
 </style>

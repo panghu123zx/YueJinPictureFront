@@ -3,6 +3,7 @@
  * @param size
  */
 import { saveAs } from 'file-saver'
+import dayjs from 'dayjs'
 
 export const formatSize = (size?: number) => {
   if (!size) return '未知'
@@ -26,6 +27,7 @@ export function downloadImage(url?: string, fileName?: string) {
 
 
 export function toHexColor(input) {
+  if(input===undefined || input===null) return;
   // 去掉 0x 前缀
   const colorValue = input.startsWith('0x') ? input.slice(2) : input
 
@@ -35,3 +37,11 @@ export function toHexColor(input) {
   // 返回标准 #RRGGBB 格式
   return `#${hexColor}`
 }
+
+export function formatView(viewCount? : number) {
+  if(!viewCount) return '未知'
+  if(viewCount < 1000) return viewCount
+  if(viewCount < 10000) return (viewCount / 1000).toFixed(1) + 'k'
+  return (viewCount / 10000).toFixed(1) + 'w'
+}
+

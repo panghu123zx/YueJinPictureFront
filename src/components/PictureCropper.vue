@@ -126,11 +126,11 @@ const handleUpload = async ({ file }: any) => {
     } : {}
     params.spaceId = props.spaceId
     const res = await uploadPictureUsingPost(params, {}, file)
-    if (res.code === 0) {
+    if (res.code === 0&& res.data) {
       props.onSuccess?.(res.data)
       message.success('上传图片成功')
     } else {
-      message.error('上传图片失败')
+      message.error('上传图片失败'+res.data)
     }
   } catch (e) {
     message.error('上传图片失败:{}', e.message)

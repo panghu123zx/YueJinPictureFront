@@ -81,10 +81,6 @@
         </a-card>
       </a-col>
     </a-row>
-
-
-
-
   </div>
 </template>
 <script lang='ts' setup>

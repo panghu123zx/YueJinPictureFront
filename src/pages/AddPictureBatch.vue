@@ -43,15 +43,12 @@
 </template>
 <script lang='ts' setup>
 import PictureUpload from '../components/PictureUpload.vue'
-import { onMounted, ref } from 'vue'
-import PictureEditDto = API.PictureEditDto
+import {  ref } from 'vue'
 import {
-  editPictureUsingPost,
-  getPictureByIdVoUsingGet,
-  listPictureTagCategoryUsingGet, uploadPictureByBatchUsingPost
+ uploadPictureByBatchUsingPost
 } from '../api/pictureController'
 import { message } from 'ant-design-vue'
-import { useRoute, useRouter } from 'vue-router'
+import {  useRouter } from 'vue-router'
 import UrlUpload from '../components/UrlUpload.vue'
 
 

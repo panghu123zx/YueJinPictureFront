@@ -1,7 +1,7 @@
 <template>
   <div id='SpaceCategoryAnalyzePage'>
     <a-card title='图片分类占用'>
-      <v-chart :option='option' style='max-width: 100%; height: 400px;' />
+      <v-chart :option='option' style='width: 100%; height: 400px;' />
     </a-card>
 
   </div>
@@ -82,6 +82,7 @@ const option = computed(() => {
 
 <style scoped>
 #SpaceCategoryAnalyzePage {
+  width: 100%;
 }
 
 </style>
