@@ -110,7 +110,7 @@ const fetchMyLike = async () => {
     targetType: 1
   })
   if (res.code === 0 && res.data) {
-    res.data?.likePost?.forEach(item => {
+    res.data?.forEach(item => {
       isLike.value.push(item)
     })
   }

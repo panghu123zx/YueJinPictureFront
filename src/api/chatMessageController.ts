@@ -16,3 +16,11 @@ export async function backMessageUsingPost(
     ...(options || {}),
   })
 }
+
+/** getHistoryMessages GET /api/chatmessage/get/his */
+export async function getHistoryMessagesUsingGet(options?: { [key: string]: any }) {
+  return request<API.BaseResponseLong_>('/api/chatmessage/get/his', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}

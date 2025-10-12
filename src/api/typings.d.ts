@@ -56,7 +56,6 @@ declare namespace API {
     fileUrl?: string
     id?: number
     introduction?: string
-    md5?: string
     size?: number
     title?: string
     updateTime?: string
@@ -283,6 +282,12 @@ declare namespace API {
   type BaseResponsePictureVO_ = {
     code?: number
     data?: PictureVO
+    message?: string
+  }
+
+  type BaseResponseSetString_ = {
+    code?: number
+    data?: string[]
     message?: string
   }
 
@@ -580,6 +585,8 @@ declare namespace API {
   }
 
   type ForumVO = {
+    canDelete?: boolean
+    canEdit?: boolean
     category?: string
     commentCount?: number
     content?: string
@@ -1251,9 +1258,8 @@ declare namespace API {
     likePostVO?: ForumVO[]
     likeShare?: number
     targetType?: number
-    userAvatar?: string
     userId?: number
-    userName?: string
+    userVO?: UserVO
   }
 
   type UserLoginDto = {

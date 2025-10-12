@@ -3,7 +3,7 @@
     <template #renderItem='{ item }'>
       <a-list-item @click='uploadItemClick(item)' style='padding-left: 0px'>
         <a-list-item-meta
-          :description='item?.lastMessage + "  "+ dayjs(item?.lastMessageTime).format("HH:mm") ?? " " '
+          :description='item?.lastMessage  ?? " " '
         >
           <template #title>
             {{item.isReceive===0? (item?.title ?? item?.targetUserVO?.userName) :(item.receiveTitle ?? item?.targetUserVO?.userName) }}
@@ -12,7 +12,7 @@
             <a-avatar :src='item?.targetUserVO?.userAvatar' />
           </template>
         </a-list-item-meta>
-        <div>{{ item?.unreadCount === 0 ? '' : item.unreadCount }}</div>
+        <div style='margin-right: -30px;'>{{dayjs(item?.lastMessageTime).format("HH:mm") ?? " "   }}</div>
         <template #actions>
           <a-dropdown :trigger="['click']">
             <MoreOutlined />
@@ -78,7 +78,6 @@ const showModal = () => {
 //点击的时候，向父组件传递聊天室的数据，并清空未读消息数
 const uploadItemClick=async (item)=>{
   emit('itemClick',item)
-  //todo 清空未读消息数时，数据不能实时的显示，在调用一次onSuccess即可更新
   const res=await cleanChatPromptUsingPost({
     id: item?.id,
   })
@@ -126,7 +125,14 @@ const doDelete=async (item)=>{
 <style scoped>
 #chat {
 }
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-list .ant-list-item){
+:deep(.ant-list .ant-list-item) {
   padding-left: 0;
+}
+
+:deep(.ant-list-item-meta-description ){
+  max-height: 25px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

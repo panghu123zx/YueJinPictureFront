@@ -15,7 +15,7 @@ export default class PictureEditWebSocket {
    */
   connect() {
     const DEV_BASE_URL='ws://localhost:8123';
-    const PROD_BASE_URL='ws://114.55.73.240';
+    const PROD_BASE_URL='ws://106.55.164.199';
     // const url = `${PROD_BASE_URL}/api/ws/picture/edit?pictureId=${this.pictureId}`
     const url = `${DEV_BASE_URL}/api/ws/picture/edit?pictureId=${this.pictureId}`
     this.socket = new WebSocket(url)
@@ -25,14 +25,12 @@ export default class PictureEditWebSocket {
 
     // 监听连接成功事件
     this.socket.onopen = () => {
-      console.log('WebSocket 连接已建立')
       this.triggerEvent('open')
     }
 
     // 监听消息事件
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
-      console.log('收到消息:', message)
 
       // 根据消息类型触发对应事件
       const type = message.type
@@ -41,7 +39,6 @@ export default class PictureEditWebSocket {
 
     // 监听连接关闭事件
     this.socket.onclose = (event) => {
-      console.log('WebSocket 连接已关闭:', event)
       this.triggerEvent('close', event)
     }
 
@@ -58,7 +55,6 @@ export default class PictureEditWebSocket {
   disconnect() {
     if (this.socket) {
       this.socket.close()
-      console.log('WebSocket 连接已手动关闭')
     }
   }
 
@@ -69,7 +65,6 @@ export default class PictureEditWebSocket {
   sendMessage(message: object) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify(message))
-      console.log('消息已发送:', message)
     } else {
       console.error('WebSocket 未连接，无法发送消息:', message)
     }

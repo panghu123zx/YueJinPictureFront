@@ -52,7 +52,7 @@
 
       </a-col>
     </a-row>
-<AllUploadPage  ref='allUploadPage'/>
+    <AllUploadPage  ref='allUploadPage'/>
   </div>
 </template>
 <script setup lang='ts'>
@@ -161,9 +161,8 @@ const doLogout = async () => {
 /**
  * 过滤菜单
  */
-// const items = ref()
-const filterItems = (menu = [] as MenuProps['items']) => {
-  return menu?.filter((menu) => {
+const filterItems = (menus = [] as MenuProps['items']) => {
+  return menus?.filter((menu) => {
     if (menu.key.startsWith('/admin')) {
       const loginUser = useLoginuser.loginUser
       if (!loginUser || loginUser.userRole !== 'admin') {
@@ -174,7 +173,7 @@ const filterItems = (menu = [] as MenuProps['items']) => {
   })
 }
 
-const items = computed<MenuProps['items']>(() => filterItems(originItems))
+const items = computed(() => filterItems(originItems))
 
 </script>
 
@@ -190,15 +189,15 @@ const items = computed<MenuProps['items']>(() => filterItems(originItems))
   margin-left: 12px;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
-.ant-menu-item.ant-menu-item-only-child >.anticon,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
-.ant-menu-submenu-title.ant-menu-item-only-child >.anticon, :where(.css-dev-only-do-not-override-1p3hq3p).ant-menu
-.ant-menu-item.ant-menu-item-only-child
->.ant-menu-item-icon, :where(.css-dev-only-do-not-override-1p3hq3p).ant-menu .ant-menu-submenu-title.ant-menu-item-only-child >.ant-menu-item-icon){
+:deep(
+  .ant-menu .ant-menu-item.ant-menu-item-only-child > .anticon,
+  .ant-menu .ant-menu-submenu-title.ant-menu-item-only-child > .anticon,
+  .ant-menu .ant-menu-item.ant-menu-item-only-child > .ant-menu-item-icon,
+  .ant-menu .ant-menu-submenu-title.ant-menu-item-only-child > .ant-menu-item-icon
+) {
   width: 44px;
   height: 44px;
   background-color: #7ed321;
-  border-radius: 52%;
+  border-radius: 50%; /* 52% 改为 50% 更标准（圆形） */
 }
 </style>

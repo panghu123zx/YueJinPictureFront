@@ -198,7 +198,6 @@ const initWebSocket = () => {
 
   //监听消息
   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.INFO, (msg: any) => {
-    console.log('收到消息:', msg)
     message.info(msg.message)
   })
 
@@ -210,21 +209,18 @@ const initWebSocket = () => {
 
   //监听进入编辑状态
   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.ENTER_EDIT, (msg: any) => {
-    console.log('收到进入编辑状态消息:', msg)
     message.info(msg.message)
     editingUser.value = msg.user
   })
 
   //监听退出编辑状态
   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.EXIT_EDIT, (msg: any) => {
-    console.log('收到退出')
     message.info(msg.message)
     editingUser.value = undefined
   })
 
 
   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.EDIT_ACTION, (msg: any) => {
-    console.log('收到编辑操作消息:', msg)
     message.info(msg.message)
     switch (msg.editAction) {
       case PICTURE_EDIT_ACTION_ENUM.ZOOM_IN:

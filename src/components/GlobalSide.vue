@@ -22,7 +22,6 @@ import { computed, h, onMounted, ref, watchEffect } from 'vue'
 import { UserOutlined, PictureOutlined, TeamOutlined,CloudUploadOutlined,UsergroupAddOutlined } from '@ant-design/icons-vue'
 import { useLoginuserStore } from '../stores/loginuserStore'
 import { useRouter } from 'vue-router'
-import { MenuProps, message } from 'ant-design-vue'
 import { SPACE_TYPE_ENUM } from '../constants/spaceuser'
 import { listMySpaceUserUsingGet } from '../api/spaceUserController'
 

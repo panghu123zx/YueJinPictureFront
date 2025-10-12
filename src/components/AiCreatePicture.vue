@@ -134,7 +134,7 @@ defineExpose({
 </script>
 
 <style scoped>
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-modal .ant-modal-content) {
+:deep(.ant-modal .ant-modal-content) {
   width: 800px;
   height: 560px;
 }

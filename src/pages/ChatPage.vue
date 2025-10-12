@@ -224,7 +224,7 @@ const content = ref('')
 const historyMessage = ref()
 //在线用户
 const oneLineUser = ref()
-//0-图片，1-文件，2-音频
+//0-图片，1-文件
 const picOrFile = ref<number>(0)
 const replay = ref(0)
 const replayContent = ref('')
@@ -279,6 +279,7 @@ const handleUpload = async ({ file }: any) => {
     const res = await addAudioFileUsingPost({
       fileType: picOrFile.value
     }, {}, file)
+    console.log(res)
     if (res.code === 0 && res.data) {
       //发送消息
       if (websocket) {
@@ -462,12 +463,10 @@ const initWebSocket = () => {
   websocket.connect()
   //监听消息
   websocket.on(CHAT_MESSAGE_TYPE_ENUM.JOIN, (msg: any) => {
-    console.log('收到消息:', msg)
   })
 
   //监听错误
   websocket.on(CHAT_MESSAGE_TYPE_ENUM.ERROR, (msg: any) => {
-    console.error('收到错误消息123:', msg)
   })
 
   //监听收到历史消息状态
@@ -475,23 +474,19 @@ const initWebSocket = () => {
     historyMessage.value = msg
     historyMessage.value = historyMessage.value.historyMessage.records.reverse()
     haveMore.value = historyMessage.value.length === 50
-    console.log('historyMessage', historyMessage.value)
   })
 
   //监听在线用户
   websocket.on(CHAT_MESSAGE_TYPE_ENUM.ONLINEUSER, (msg: any) => {
     oneLineUser.value = msg
-    console.log('oneLineUser：', oneLineUser.value)
   })
 
   //监听退出编辑状态
   websocket.on(CHAT_MESSAGE_TYPE_ENUM.EXIT, (msg: any) => {
-    console.log('收到退出123')
   })
 
   //监听发送消息
   websocket.on(CHAT_MESSAGE_TYPE_ENUM.SEND, (msg: any) => {
-    console.log('收到发送之后的消息后的历史数据:', msg)
     historyMessage.value = msg
     historyMessage.value = historyMessage.value.historyMessage.records.reverse()
     haveMore.value = historyMessage.value.length === 50
@@ -559,7 +554,7 @@ const initWebSocket = () => {
   height: 650px;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-collapse .ant-collapse-content>.ant-collapse-content-box) {
+:deep(.ant-collapse .ant-collapse-content > .ant-collapse-content-box) {
   height: 38px;
   padding-top: 10px;
   border: 1px solid #fff7f7;
@@ -567,7 +562,7 @@ const initWebSocket = () => {
   background-color: #eee;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-collapse .ant-collapse-item:last-child >.ant-collapse-content) {
+:deep(.ant-collapse .ant-collapse-item-item:last-child > .ant-collapse-content) {
   background-color: #f9f7f7;
   border: none;
 }

@@ -247,33 +247,37 @@ const doSearch = () => {
   font-size: small;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab) {
+:deep(.ant-tabs .ant-tabs-tab) {
   width: 63px;
-  background-color: #f5f7fa;
-  padding-left: 17px;
-  border-radius: 15px !important;
   height: 36px;
   margin-left: 15px;
+  padding-left: 17px;
+  background-color: #f5f7fa;
+  border-radius: 15px !important;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab-active) {
+:deep(.ant-tabs .ant-tabs-tab-active) {
   background-color: #c68585;
   color: white;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+:deep(.ant-tabs .ant-tabs-tab-active .ant-tabs-tab-btn) {
   color: white;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-bottom >.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >div>.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-bottom >div>.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab) {
+:deep(
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab
+) {
   margin-left: 10px;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >.ant-tabs-nav .ant-tabs-tab-active,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >div>.ant-tabs-nav .ant-tabs-tab-active) {
+:deep(
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active
+) {
   border-bottom-color: #c68585;
 }
 

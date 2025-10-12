@@ -60,9 +60,6 @@
                         two-tone-color='#f5a0af'
                       />
                     </a-space>
-<!--                    <a-space @click='toComment(item)'>-->
-<!--                      <CommentOutlined />-->
-<!--                    </a-space>-->
                   </a-space>
                 </div>
               </div>
@@ -71,7 +68,6 @@
         </template>
       </Waterfall>
     </div>
-<!--    <CommentDrawer ref='commentRef' :id='pictureId' :targetType='0' :targetUserId='targetUserId'/>-->
   </div>
 
 </template>
@@ -191,7 +187,7 @@ const fetchMyLike = async () => {
     targetType: 0
   })
   if (res.code === 0 && res.data) {
-    res.data?.likePic?.forEach(item => {
+    res.data?.forEach(item => {
       isLike.value.push(item)
     })
   }
@@ -200,10 +196,6 @@ const fetchMyLike = async () => {
 onMounted(() => {
   fetchMyLike()
 })
-
-
-
-
 
 /**
  * 添加点赞
@@ -217,7 +209,7 @@ const addlike = async (item) => {
     message.success('图片不错，来个赞')
     item.likeCount++
   } else {
-    message.error('点赞失败')
+    message.error('点赞失败'+res.data)
   }
   //发送消息
   await addLikeMessageUsingPost({
@@ -239,7 +231,7 @@ const unlike = async (item) => {
     targetType: 0
   })
   if (res.code !== 0) {
-    message.error('取消点赞失败')
+    message.error('取消点赞失败'+res.data)
     return
   }
   item.likeCount--
@@ -351,6 +343,10 @@ const toComment = (item) => {
 .custom-card:hover .author-info {
   opacity: 1;
   transform: translateY(0);
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .author-name {

@@ -6,13 +6,13 @@
           <h3> {{ formatSize(spaceUsageData?.usedSize) }} /
             {{ spaceUsageData?.maxSize ? formatSize(spaceUsageData?.maxSize) : '无限制' }}
           </h3>
-          <a-progress type='dashboard' :percent='spaceUsageData?.sizeUsageRatio *100 ?? 0' />
+          <a-progress type='dashboard' :percent='(spaceUsageData?.sizeUsageRatio *100) ?? 0' />
         </div>
       </a-card>
       <a-card title='图片数量' style='width: 50%;height: 400px'>
         <div style='text-align: center;'>
           <h3>{{ spaceUsageData?.usedCount }} / {{ spaceUsageData?.maxCount ? spaceUsageData?.maxCount : '无限制' }}</h3>
-          <a-progress type='dashboard' :percent='spaceUsageData?.countUsageRatio *100 ?? 0' />
+          <a-progress type='dashboard' :percent='(spaceUsageData?.countUsageRatio *100) ?? 0' />
         </div>
       </a-card>
     </a-flex>

@@ -359,37 +359,41 @@ const handlescrolldebound = dobounce(handleScroll, 200)
   border: none;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab) {
+:deep(.ant-tabs .ant-tabs-tab) {
   width: 84px;
-  background-color: #f5f7fa;
-  border-radius: 15px !important;
   height: 36px;
   margin-left: 15px;
+  background-color: #f5f7fa;
+  border-radius: 15px !important;
   justify-content: center;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab-active) {
+:deep(.ant-tabs .ant-tabs-tab-active) {
   background-color: #b4cbf4;
   color: white;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+:deep(.ant-tabs .ant-tabs-tab-active .ant-tabs-tab-btn) {
   color: white;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-bottom >.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >div>.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-bottom >div>.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab) {
+:deep(
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab
+) {
   margin-left: 10px;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >.ant-tabs-nav .ant-tabs-tab-active,
-:where(.css-dev-only-do-not-override-1p3hq3p).ant-tabs-card.ant-tabs-top >div>.ant-tabs-nav .ant-tabs-tab-active) {
+:deep(
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active
+) {
   border-bottom-color: #b4cbf4;
 }
 
-:deep(:where(.css-dev-only-do-not-override-1p3hq3p).ant-tag-checkable-checked){
+:deep(.ant-tag-checkable-checked) {
   background-color: #99add2;
   border-radius: 6px;
 }
